@@ -171,7 +171,7 @@ SqlSession 객체는 스프링 설정 파일에 SqlSessionFactoryBean 클래스�
 2. 아래와 같은 코드를 입력해주자  
 3. **이전에 BoardDAOTemplates에 있던 @Repository를 주석을 달아주자**  
 
-** BoardDAOMyBatis**   
+**BoardDAOMyBatis**   
 ```java
 package com.mycompany.myapp.dao.board;
 
