@@ -16,6 +16,7 @@ jdbc.password=1234
 ![mysql 전환2](https://user-images.githubusercontent.com/50267433/84229479-a72ae500-ab24-11ea-92d2-e0f5a80abc2e.PNG)
 
 # 2. MyBatis 시작하기    
+## 2.1. Mapper xml 정의하기  
 1. 프로젝트에 마우스를 대고 오른쪽 클릭후 new -> other 클릭  
 2. mybatis를 검색하고 mybatis mapper xml 클릭 
 3. board-mapping.xml 이라 입력을 해주자 (내가 이름 지정한 것이다)   
@@ -58,3 +59,34 @@ jdbc.password=1234
 ![mybatis 생성4](https://user-images.githubusercontent.com/50267433/84231649-8e70fe00-ab29-11ea-8edc-1e614d77aee5.PNG)
 ![board-mapper-1](https://user-images.githubusercontent.com/50267433/84231662-95980c00-ab29-11ea-853d-d5d1d5ddfd2c.PNG)
 
+## 2.2. Configuration xml 정의하기    
+
+1. 프로젝트에 마우스를 대고 오른쪽 클릭후 new -> other 클릭  
+2. mybatis를 검색하고 mybatis configuration xml 클릭 
+3. sql-map-config.xml 이라 입력을 해주자 (실무에서 주로 사용하는 이름)   
+4. sql-map-config.xml 와 db.properties가 생성되었다.
+5. db.properties는 우리가 기존에 config 폴더에 database.properties를 생성해주었으니 삭제하자  
+6. 바깥쪽에 생성되었기에 ```src -> main -> resources``` 로 sql-map-config.xml를 넣어주자  
+7. 아래 코드로 입력해주자    
+    
+```xml   
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="config/database.properties" />
+	<typeAliases>
+		<typeAlias type="com.mycompany.myapp.dto.board.Board" alias="board"></typeAlias>
+	</typeAliases>
+	<mappers>
+		<mapper resource="mappings/board-mapping.xml" />
+	</mappers>
+</configuration>
+```
+![mybatis 생성](https://user-images.githubusercontent.com/50267433/84231084-52896900-ab28-11ea-9d47-f11fd6c1b307.png)
+![configuration 생성1](https://user-images.githubusercontent.com/50267433/84232578-8b770d00-ab2b-11ea-90a9-5965613c8400.PNG)
+![configuration 생성2](https://user-images.githubusercontent.com/50267433/84232586-8fa32a80-ab2b-11ea-8f5c-ada2a87e6c23.PNG)
+![configuration 생성3](https://user-images.githubusercontent.com/50267433/84232597-9467de80-ab2b-11ea-9ccd-977c17516e18.PNG)
+![configuration 생성4](https://user-images.githubusercontent.com/50267433/84232604-992c9280-ab2b-11ea-8cc5-fee2b92c1f64.PNG)
+![configuration 생성5](https://user-images.githubusercontent.com/50267433/84232610-9d58b000-ab2b-11ea-93a1-998453312bb6.PNG)
