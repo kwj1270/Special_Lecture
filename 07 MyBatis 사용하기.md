@@ -90,3 +90,55 @@ jdbc.password=1234
 ![configuration 생성3](https://user-images.githubusercontent.com/50267433/84232597-9467de80-ab2b-11ea-9ccd-977c17516e18.PNG)
 ![configuration 생성4](https://user-images.githubusercontent.com/50267433/84232604-992c9280-ab2b-11ea-8cc5-fee2b92c1f64.PNG)
 ![configuration 생성5](https://user-images.githubusercontent.com/50267433/84232610-9d58b000-ab2b-11ea-93a1-998453312bb6.PNG)
+
+## 2.3. SqlSession 객체 생성하기 
+MyBatis를 이용해서 DAO를 구현하려면 SqlSession 객체가 필요하다.        
+SqlSession 객체는 스프링 설정 파일에 SqlSessionFactoryBean 클래스를 Bean 등록해야한다.       
+그래야 SqlSessionFactoryBean 객체로부터 DB 연동 구현에 사용한 SqlSession 객체를 얻을 수 있다.      
+
+1. webapp -> WEB-INF -> spring -> root-context.xml 에 들어간다.
+2. 아래와 같은 코드를 입력해주자  
+
+```xml
+	<!-- SqlSessionFactoryBean 생성 -->
+	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:sql-map-config.xml" />
+	</bean>
+```
+
+**전체 root-context.xml**
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+  <context:property-placeholder location="classpath:config/database.properties"/>
+  
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}"/>
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<!-- Spring JDBC 설정 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>	
+	
+	<!-- SqlSessionFactoryBean 생성 -->
+	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:sql-map-config.xml" />
+	</bean>
+		
+</beans>
+```
+
+
