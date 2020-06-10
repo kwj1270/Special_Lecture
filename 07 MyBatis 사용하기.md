@@ -19,3 +19,5 @@ jdbc.password=1234
 ![mybatis 생성](https://user-images.githubusercontent.com/50267433/84231084-52896900-ab28-11ea-9d47-f11fd6c1b307.png)
 ![mybatis 생성2](https://user-images.githubusercontent.com/50267433/84231094-587f4a00-ab28-11ea-9055-f56b3e7b3b92.PNG)
 ![mybatis 생성3](https://user-images.githubusercontent.com/50267433/84231117-6208b200-ab28-11ea-8c46-ec3ec6393511.PNG)
+![mybatis 생성4](https://user-images.githubusercontent.com/50267433/84231649-8e70fe00-ab29-11ea-8edc-1e614d77aee5.PNG)
+![board-mapper-1](https://user-images.githubusercontent.com/50267433/84231662-95980c00-ab29-11ea-853d-d5d1d5ddfd2c.PNG)
