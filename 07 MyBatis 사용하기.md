@@ -66,7 +66,7 @@ jdbc.password=1234
 ![mybatis 생성2](https://user-images.githubusercontent.com/50267433/84231094-587f4a00-ab28-11ea-9055-f56b3e7b3b92.PNG)
 ![mybatis 생성3](https://user-images.githubusercontent.com/50267433/84231117-6208b200-ab28-11ea-8c46-ec3ec6393511.PNG)
 ![mybatis 생성4](https://user-images.githubusercontent.com/50267433/84231649-8e70fe00-ab29-11ea-8edc-1e614d77aee5.PNG)
-![board-mapper-1](https://user-images.githubusercontent.com/50267433/84231662-95980c00-ab29-11ea-853d-d5d1d5ddfd2c.PNG)
+![board-mapper-1](https://user-images.githubusercontent.com/50267433/84234308-f249f580-ab2e-11ea-8c76-a43ba9ec3f0d.PNG)
 
 ## 2.2. Configuration xml 정의하기    
 
