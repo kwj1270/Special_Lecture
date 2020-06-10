@@ -104,7 +104,7 @@ jdbc.password=1234
 MyBatis를 이용해서 DAO를 구현하려면 SqlSession 객체가 필요하다.        
 SqlSession 객체는 스프링 설정 파일에 SqlSessionFactoryBean 클래스를 Bean 등록해야한다.       
 그래야 SqlSessionFactoryBean 객체로부터 DB 연동 구현에 사용한 SqlSession 객체를 얻을 수 있다.      
-
+      
 1. webapp -> WEB-INF -> spring -> root-context.xml 에 들어간다.
 2. 아래와 같은 코드를 입력해주자  
 
@@ -160,5 +160,62 @@ SqlSession 객체는 스프링 설정 파일에 SqlSessionFactoryBean 클래스�
 </beans>
 ```
 ![root xml 설정](https://user-images.githubusercontent.com/50267433/84234384-20c7d080-ab2f-11ea-9755-7acb5c2e3d3f.PNG)
+
+## 2.4. BoardDAOMyBatis 클래스 만들기   
+바로 앞에서 만든 SqlSession 객체는 mapper를 의미한다.      
+다시 설명하자면 SqlSession -> sql-mpa-config.xml의 정보를 읽어서 board-mapper.xml의 정보를 가진 객체이다.     
+즉, SqlSession 은 board-mapper.xml의 객체라고 보면된다.     
+그렇기에 이를 의존성 주입으로 입력 받은뒤 해당 객체를 실행해주는 것이 MyBatis를 사용하는 방법이다.   
+   
+1. myapp -> dao -> board 에 BoardDAOMyBatis 클래스를 생성하자  
+2. 아래와 같은 코드를 입력해주자  
+3. **이전에 BoardDAOJDBC에 있던 @Repository를 주석을 달아주자**  
+
+** BoardDAOMyBatis**   
+```java
+package com.mycompany.myapp.dao.board;
+
+import java.util.List;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.mycompany.myapp.dto.board.Board;
+
+@Repository
+public class BoardDAOMyBatis implements BoardDAO{
+	
+	@Autowired
+	private SqlSessionTemplate mybatis;
+
+	public void insert(Board vo) {
+		mybatis.insert("BoardDAO.insert", vo);
+		mybatis.commit();
+	}
+
+	public void update(Board vo) {
+		mybatis.update("BoardDAO.update", vo);
+		mybatis.commit();
+	}
+
+	public void delete(Board vo) {
+		mybatis.delete("BoardDAO.delete", vo);
+		mybatis.commit();
+	}
+
+	public Board getOne(Board vo) {
+		return (Board)mybatis.selectOne("BoardDAO.getOne", vo);
+	}
+
+	public List<Board> getAll() {
+		return mybatis.selectList("BoardDAO.getAll");
+	}
+}
+```
+![mybatis dao](https://user-images.githubusercontent.com/50267433/84234869-e90d5880-ab2f-11ea-9190-975957d0eddc.PNG)     
+![mybatis dao2](https://user-images.githubusercontent.com/50267433/84234896-f591b100-ab2f-11ea-8815-cfa9983175a2.PNG)
+        
+
 
 
