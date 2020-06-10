@@ -31,7 +31,16 @@ jdbc.password=1234
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="BoardDAO">
-      
+	
+	<resultMap id="boardResult" type="board">
+		<id property="seq" column="SEQ" />
+		<result property="title" column="TITLE" />
+		<result property="writer" column="WRITER" />
+		<result property="content" column="CONTENT" />
+		<result property="regDate" column="REGDATE" />
+		<result property="cnt" column="CNT" />
+	</resultMap>
+	
 	<insert id="insert">
 		INSERT INTO board(seq, title, writer, content) VALUES((select nvl(max(seq), 0)+1 from board),#{title},#{writer},#{content})
 	</insert>
@@ -100,10 +109,15 @@ SqlSession 객체는 스프링 설정 파일에 SqlSessionFactoryBean 클래스�
 2. 아래와 같은 코드를 입력해주자  
 
 ```xml
-	<!-- SqlSessionFactoryBean 생성 -->
-	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<!-- Spring과 Mybatis 연동 설정 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="configLocation" value="classpath:sql-map-config.xml" />
+	</bean>
+	
+	<!-- SqlSessionTemplate 생성 -->
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession"></constructor-arg>
 	</bean>
 ```
 
@@ -132,10 +146,15 @@ SqlSession 객체는 스프링 설정 파일에 SqlSessionFactoryBean 클래스�
 		<property name="dataSource" ref="dataSource"/>
 	</bean>	
 	
-	<!-- SqlSessionFactoryBean 생성 -->
-	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<!-- Spring과 Mybatis 연동 설정 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="configLocation" value="classpath:sql-map-config.xml" />
+	</bean>
+	
+	<!-- SqlSessionTemplate 생성 -->
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession"></constructor-arg>
 	</bean>
 		
 </beans>
