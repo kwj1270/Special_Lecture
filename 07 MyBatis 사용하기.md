@@ -159,5 +159,6 @@ SqlSession 객체는 스프링 설정 파일에 SqlSessionFactoryBean 클래스�
 		
 </beans>
 ```
+![root xml 설정](https://user-images.githubusercontent.com/50267433/84234384-20c7d080-ab2f-11ea-9755-7acb5c2e3d3f.PNG)
 
 
