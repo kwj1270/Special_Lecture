@@ -2,6 +2,8 @@
       
 1. config 폴더에 있는 ```database.properties``` 를 클릭해준다.         
 2. 아래와 같은 코드로 수정을 해주자     
+       
+**database.properties**    
 ```   
 jdbc.driver=com.mysql.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/lecture?serverTimezone=UTC
