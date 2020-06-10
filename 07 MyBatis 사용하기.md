@@ -14,3 +14,8 @@ jdbc.password=1234
        
 ![mysql 전환](https://user-images.githubusercontent.com/50267433/84229450-88c4e980-ab24-11ea-930d-80a0fd7f4040.PNG)
 ![mysql 전환2](https://user-images.githubusercontent.com/50267433/84229479-a72ae500-ab24-11ea-92d2-e0f5a80abc2e.PNG)
+
+# MyBatis 시작하기    
+![mybatis 생성](https://user-images.githubusercontent.com/50267433/84231084-52896900-ab28-11ea-9d47-f11fd6c1b307.png)
+![mybatis 생성2](https://user-images.githubusercontent.com/50267433/84231094-587f4a00-ab28-11ea-9055-f56b3e7b3b92.PNG)
+![mybatis 생성3](https://user-images.githubusercontent.com/50267433/84231117-6208b200-ab28-11ea-8c46-ec3ec6393511.PNG)
