@@ -215,6 +215,7 @@ public class BoardDAOMyBatis implements BoardDAO{
 ```
 ![mybatis dao](https://user-images.githubusercontent.com/50267433/84234869-e90d5880-ab2f-11ea-9190-975957d0eddc.PNG)     
 ![mybatis dao2](https://user-images.githubusercontent.com/50267433/84234896-f591b100-ab2f-11ea-8815-cfa9983175a2.PNG)
+![마이배티스결과](https://user-images.githubusercontent.com/50267433/84235184-5f11bf80-ab30-11ea-8d11-51b49c911a94.PNG)
         
 
 
