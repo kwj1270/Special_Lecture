@@ -135,5 +135,88 @@ JDBCTemplate 에 사용되는 DataSource 객체를 만들어 주었으니 JDBCTe
 ***
 # 3. JDBCTemplate 을 이용한 BoardDAOTemplate 생성   
 
-   
+1. myapp -> dao -> board 에서 BoardDAOTemplate 클래스를 생성해준다.         
+2. 아래 코드를 입력해줍니다.          
+3. 이제 기존 BoardDAOJDBC 에서 ```@Repository("boardDAOJDBC")```를 주석처리를 해줍니다.        
 
+**BoardDAOTemplate**
+```java
+package com.mycompany.myapp.dao.board;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import com.mycompany.myapp.dto.board.Board;
+
+@Repository
+public class BoardDAOTemplate implements BoardDAO{
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	// SQL 명령어들
+	private final String BOARD_INSERT = "insert into board(seq, title, writer, content) values((select nvl(max(seq), 0)+1 from board),?,?,?)";
+	private final String BOARD_UPDATE = "update board set title=?, content=? where seq=?";
+	private final String BOARD_DELETE = "delete board where seq=?";
+	private final String BOARD_GET = "select * from board where seq=?";
+	private final String BOARD_LIST = "select * from board order by seq desc";
+
+	// CRUD 기능의 메소드 구현
+	// 글 등록
+	@Override
+	public void insert(Board vo) {
+		System.out.println("===> Spring JDBC로 insertBoard() 기능 처리");
+		jdbcTemplate.update(BOARD_INSERT, vo.getTitle(), vo.getWriter(), vo.getContent());
+	}
+
+	// 글 수정
+	@Override
+	public void update(Board vo) {
+		System.out.println("===> Spring JDBC로 updateBoard() 기능 처리");
+		jdbcTemplate.update(BOARD_UPDATE, vo.getTitle(), vo.getContent(), vo.getSeq());
+	}
+
+	// 글 삭제
+	@Override
+	public void delete(Board vo) {
+		System.out.println("===> Spring JDBC로 deleteBoard() 기능 처리");
+		jdbcTemplate.update(BOARD_DELETE, vo.getSeq());
+	}
+
+	// 글 상세 조회
+	@Override
+	public Board getOne(Board vo) {
+		System.out.println("===> Spring JDBC로 getBoard() 기능 처리");
+		Object[] args = { vo.getSeq() };
+		return jdbcTemplate.queryForObject(BOARD_GET, args, new BoardRowmapper());
+	}
+
+	// 글 목록 조회
+	@Override
+	public List<Board> getAll() {
+		System.out.println("===> Spring JDBC로 getBoardList() 기능 처리");
+		return jdbcTemplate.query(BOARD_LIST, new BoardRowmapper());
+	}
+}
+
+class BoardRowmapper implements RowMapper<Board> {
+	public Board mapRow(ResultSet rs, int rowNum) throws SQLException {
+		Board board = new Board();
+		board.setSeq(rs.getInt("SEQ"));
+		board.setTitle(rs.getString("TITLE"));
+		board.setWriter(rs.getString("WRITER"));
+		board.setContent(rs.getString("CONTENT"));
+		board.setRegDate(rs.getDate("REGDATE"));
+		board.setCnt(rs.getInt("CNT"));
+		return board;
+	}
+}
+```
+![jdbcTemplet 사용5](https://user-images.githubusercontent.com/50267433/84334495-75ba2400-abcd-11ea-9d65-65d3baeb2ce3.PNG)     
+![jdbcTemplet 사용6](https://user-images.githubusercontent.com/50267433/84334644-ce89bc80-abcd-11ea-98f7-a1e9ea8dc7bc.PNG)
