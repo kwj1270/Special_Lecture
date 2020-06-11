@@ -69,6 +69,8 @@ jdbc.url=jdbc:h2:tcp://localhost/~/test
 jdbc.username=sa
 jdbc.password=
 ```
+![jdbcTemplet 사용2](https://user-images.githubusercontent.com/50267433/84333901-f8da7a80-abcb-11ea-9590-1cd9a4e1b8f6.PNG)   
+
 5. 그리고 다시 webapp -> WEB-INF -> spring -> root-context.xml 의 값을 아래와 같이 바꿔줍시다.  
 
 **root-context.xml**
@@ -83,7 +85,7 @@ jdbc.password=
 	</bean>
 ```
 ```<context:property-placeholder location="classpath:config/database.properties"/>```는 properties를 사용하겠다는 뜻이다.    
+![jdbcTemplet 사용3](https://user-images.githubusercontent.com/50267433/84334068-5ec70200-abcc-11ea-997c-184326e0360c.PNG)
 
-![jdbcTemplet 사용2](https://user-images.githubusercontent.com/50267433/84333901-f8da7a80-abcb-11ea-9590-1cd9a4e1b8f6.PNG)   
    
 
