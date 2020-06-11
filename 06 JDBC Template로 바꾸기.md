@@ -88,7 +88,49 @@ jdbc.password=
 ![jdbcTemplet 사용3](https://user-images.githubusercontent.com/50267433/84334068-5ec70200-abcc-11ea-997c-184326e0360c.PNG)   
 ```<context:property-placeholder location="classpath:config/database.properties"/>```는 properties를 사용하겠다는 뜻이다.    
 
+## 2.4. JDBCTemplate 객체 생성하기  
+JDBCTemplate 에 사용되는 DataSource 객체를 만들어 주었으니 JDBCTemplate 객체를 만들어 줍시다.  
 
+1.  webapp -> WEB-INF -> spring -> root-context.xml 에 아래와 같은 코드를 추가해줍니다.        
+**추가할 코드**     
+```xml
+	<!-- Spring JDBC 설정 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>	
+```
+
+**root-context.xml 전체 코드**
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+  <context:property-placeholder location="classpath:config/database.properties"/>
+  
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}"/>
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<!-- Spring JDBC 설정 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>	
+		
+</beans>
+```
+![jdbcTemplet 사용4](https://user-images.githubusercontent.com/50267433/84334276-fc223600-abcc-11ea-9dae-9291ea062281.PNG)    
+```
+이제 우리는 JDBC대신에 이를 간략화 시켜줄 수 있는 스프링 JDBCTemplate을 이용할 준비가 되었습니다!!!
+```
 
    
 
