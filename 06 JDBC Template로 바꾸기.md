@@ -218,5 +218,23 @@ class BoardRowmapper implements RowMapper<Board> {
 	}
 }
 ```
-![jdbcTemplet 사용5](https://user-images.githubusercontent.com/50267433/84334495-75ba2400-abcd-11ea-9d65-65d3baeb2ce3.PNG)     
-![jdbcTemplet 사용6](https://user-images.githubusercontent.com/50267433/84334644-ce89bc80-abcd-11ea-98f7-a1e9ea8dc7bc.PNG)
+![jdbcTemplet 사용5](https://user-images.githubusercontent.com/50267433/84334495-75ba2400-abcd-11ea-9d65-65d3baeb2ce3.PNG)       
+![jdbcTemplet 사용6](https://user-images.githubusercontent.com/50267433/84334644-ce89bc80-abcd-11ea-98f7-a1e9ea8dc7bc.PNG)     
+   
+두 코드를 비교해보시면 Template의 코드가 훨씬 간단한걸 알 수 있고         
+JDBC에서 무의미하게 반복되는 동작이 없어졌습니다.           
+객체지향의 본질은 무의미한 코드 반복을 클래스/객체로 만들어 사용하는 것이라는 것을 기억해주시길 바랍니다.      
+
+***
+# 4. 테스트 하기 
+이제 DAO가 제대로 변경되었는지 확인해줍시다.   
+   
+1. 프로젝트에 마우스 오른쪽 클릭을 하고 서버를 실행시켜줍니다.     
+2. url 뒤에 board를 추가시켜줍니다.    
+3. 아래 그림과 같은 결과가 나오면 정상적이게 변경이 된것입니다.      
+4. console 로그를 보면 JDBCTemplate를 사용했다는 흔적을 알 수 있습니다.   
+   
+![jdbcTemplet 사용7](https://user-images.githubusercontent.com/50267433/84334889-72736800-abce-11ea-82fa-49a4840ae5da.PNG)     
+![jdbcTemplet 사용8](https://user-images.githubusercontent.com/50267433/84334895-7606ef00-abce-11ea-851d-227726e09c62.PNG)       
+   
+  
