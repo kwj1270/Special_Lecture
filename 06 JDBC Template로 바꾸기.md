@@ -83,9 +83,12 @@ jdbc.password=
 		<property name="username" value="${jdbc.username}"/>
 		<property name="password" value="${jdbc.password}"/>
 	</bean>
-```
+```   
+   
+![jdbcTemplet 사용3](https://user-images.githubusercontent.com/50267433/84334068-5ec70200-abcc-11ea-997c-184326e0360c.PNG)   
 ```<context:property-placeholder location="classpath:config/database.properties"/>```는 properties를 사용하겠다는 뜻이다.    
-![jdbcTemplet 사용3](https://user-images.githubusercontent.com/50267433/84334068-5ec70200-abcc-11ea-997c-184326e0360c.PNG)
+
+
 
    
 
