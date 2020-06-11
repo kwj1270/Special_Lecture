@@ -131,6 +131,9 @@ JDBCTemplate 에 사용되는 DataSource 객체를 만들어 주었으니 JDBCTe
 ```
 이제 우리는 JDBC대신에 이를 간략화 시켜줄 수 있는 스프링 JDBCTemplate을 이용할 준비가 되었습니다!!!
 ```
+    
+***
+# 3. JDBCTemplate 을 이용한 BoardDAOTemplate 생성   
 
    
 
