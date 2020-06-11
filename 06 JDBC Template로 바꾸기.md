@@ -51,8 +51,10 @@ DataSource 설정은 스프링뿐만 아니라 **트랜잭션 처리**나 **myba
 		<property name="password" value=""/>
 	</bean>
 ```
+소스 코드를 해석하자면 기존에 우리가 JDBC에서 사용했던 방법을 XML로 풀어쓴거라 생각하면 된다.   
+
 ![jdbcTemplet 사용1](https://user-images.githubusercontent.com/50267433/84333511-ed3a8400-abca-11ea-82a4-d0505def131c.PNG)
-3.
+
 
 ## 2.3 database.properties
 database.properties는 데이터베이스 연결에 필요한 값들을 미리 저장해놓는 파일입니다.    
