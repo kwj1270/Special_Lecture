@@ -1,3 +1,5 @@
+MyBatis 사용하기
+==================
 # 1. Mysql로 전환하기  
       
 1. config 폴더에 있는 ```database.properties``` 를 클릭해준다.         
