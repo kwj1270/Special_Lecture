@@ -383,7 +383,7 @@ DAO를 동작시키는 Service 클래스를 만들어주자
    
 1. ```myapp``` -> ```service``` 에 **user 폴더를 생성**해주고 **UserService 클래스를 만들어줍니다.**
 2. 아래와 같은 코드를 입력해줍니다.  
-
+3. 서버를 실행시켜서 아래와 같은 결과가 나오는지 확인해주자.
 **UserService**
 ```java
 package com.mycompany.myapp.service.user;
@@ -424,4 +424,6 @@ public class UserService {
 	
 }
 ```
+![JPA Service 만들기10](https://user-images.githubusercontent.com/50267433/84457663-3c051e00-ac9e-11ea-8892-9f2d7622803b.PNG)
+![JPA Service 만들기11](https://user-images.githubusercontent.com/50267433/84457691-4a533a00-ac9e-11ea-9979-7e6e08d9e0ef.PNG)
 
