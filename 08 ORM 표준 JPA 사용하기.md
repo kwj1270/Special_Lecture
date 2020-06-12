@@ -217,3 +217,71 @@ public class User {
 ```
 ![JPA Service 만들기3](https://user-images.githubusercontent.com/50267433/84456043-f5152980-ac99-11ea-92df-5096475faded.PNG)
 ![JPA Service 만들기4](https://user-images.githubusercontent.com/50267433/84456051-fe9e9180-ac99-11ea-84b1-bee310f35c7d.PNG)
+
+## 2.3. root-context.xml 에 JPA 관련 설정해주기          
+JPA에 관련된 객체들을 ```root-context.xml```에 ```<bean>``` 등록해주자         
+컨테이너에 해당 클래스를 기반으로 객체 생성(```Class class = new Class();```)명령을 하는것이다.          
+   
+1. ```webapp``` -> ```WEB-INF``` -> ```spring``` -> ```root-context.xml```      
+2. 아래와 같은 코드들을 추가해주자.       
+
+**추가 코드**
+```xml
+	<!-- Spring과 JPA 연동설정 -->
+	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+	
+	<!-- 엔티티 매니저 팩토리 생성  -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter"></property>
+	</bean>
+```
+
+**root-context.xml 전체 코드**   
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+  <context:property-placeholder location="classpath:config/database.properties"/>
+  
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}"/>
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<!-- Spring JDBC 설정 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>	
+	
+	<!-- Spring과 Mybatis 연동 설정 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:sql-map-config.xml" />
+	</bean>
+	
+	<!-- SqlSessionTemplate 생성 -->
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+	
+	<!-- Spring과 JPA 연동설정 -->
+	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+	
+	<!-- 엔티티 매니저 팩토리 생성  -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter"></property>
+	</bean>
+		
+</beans>
+```
+![JPA Service 만들기5](https://user-images.githubusercontent.com/50267433/84456359-c055a200-ac9a-11ea-892a-b1fc719571e8.PNG)
