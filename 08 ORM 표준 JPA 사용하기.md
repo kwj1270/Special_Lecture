@@ -377,3 +377,51 @@ public class UserDAOJPA implements UserDAO {
 }
 ```
 ![JPA Service 만들기9](https://user-images.githubusercontent.com/50267433/84456891-268ef480-ac9c-11ea-920e-bc715c995aac.PNG)    
+
+## 2.5. UserService 만들기 
+DAO를 동작시키는 Service 클래스를 만들어주자  
+   
+1. ```myapp``` -> ```service``` 에 **user 폴더를 생성**해주고 **UserService 클래스를 만들어줍니다.**
+2. 아래와 같은 코드를 입력해줍니다.  
+
+**UserService**
+```java
+package com.mycompany.myapp.service.user;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.mycompany.myapp.dao.user.UserDAO;
+import com.mycompany.myapp.dto.user.User;
+
+@Service
+public class UserService {
+
+	@Autowired
+	UserDAO dao;
+	
+	public void insert(User vo) {
+		dao.insert(vo);
+	};
+
+	public void update(User vo) {
+		dao.update(vo);
+	}
+
+	public void delete(User vo) {
+		dao.delete(vo);
+	}
+
+	public User getOne(User vo) {
+		return dao.getOne(vo);
+	}
+
+	public List<User> getAll(){
+		return dao.getAll();
+	}
+	
+}
+```
+
