@@ -78,3 +78,18 @@ JPA를 잘 쓰려면 객체지향 프로그래밍과 관계형 데이터베이�
 또한 속도 이슈도 없기에 많은 트래픽을 처리하는데도 사용해도 된다.       
      
 # 1. JPA 셋팅하기 
+**InteliJ와 다르게 이클립스 EE 에서는 JPA를 사용하기 위한 설정이 필요하다**   
+
+1.
+2.
+3.
+4.
+5.
+6.
+
+![JPA 셋팅하기1](https://user-images.githubusercontent.com/50267433/84454622-052b0a00-ac96-11ea-9d40-2bc3b089a92a.PNG)
+![JPA 셋팅하기2](https://user-images.githubusercontent.com/50267433/84454629-0b20eb00-ac96-11ea-9f78-8acc2d85fee3.PNG)
+![JPA 셋팅하기3](https://user-images.githubusercontent.com/50267433/84454632-0f4d0880-ac96-11ea-82bf-0e5deca16e18.PNG)
+![JPA 셋팅하기4](https://user-images.githubusercontent.com/50267433/84454637-183dda00-ac96-11ea-9ac5-69491ec142d3.PNG)
+![JPA 셋팅하기5](https://user-images.githubusercontent.com/50267433/84454649-20961500-ac96-11ea-97a0-d386671adf81.PNG)
+
