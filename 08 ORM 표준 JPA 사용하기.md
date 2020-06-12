@@ -285,3 +285,95 @@ JPA에 관련된 객체들을 ```root-context.xml```에 ```<bean>``` 등록해�
 </beans>
 ```
 ![JPA Service 만들기5](https://user-images.githubusercontent.com/50267433/84456359-c055a200-ac9a-11ea-892a-b1fc719571e8.PNG)
+  
+## 2.4. UserDAO 인터페이스와 UserDAOJPA 만들기  
+앞서 인터페이스를 왜 정의했는지에 관해서는 이해를 했을 것 같습니다. (유지보수 위해서)       
+
+1. ```myapp``` -> ```dao``` 에서 **user 폴더 생성 후 UserDAO 인터페이스 생성```    
+2. 아래와 같은 코드를 입력  
+
+**UserDAO.interface**
+```java
+package com.mycompany.myapp.dao.user;
+
+import java.util.List;
+
+import com.mycompany.myapp.dto.user.User;
+
+
+public interface UserDAO {
+
+	public void insert(User vo);
+
+	public void update(User vo);
+
+	public void delete(User vo);
+
+	public User getOne(User vo);
+
+	public List<User> getAll();
+}
+```
+![JPA Service 만들기6](https://user-images.githubusercontent.com/50267433/84456631-6bfef200-ac9b-11ea-8439-19c3f5af8aea.PNG)      
+    
+3. 같은 폴더에 UserDAO 인터페이스를 구현하는 UserDAOJPA를 생성해주자.      
+한가지 좋은 방법으로 UserDAO 인터페이스 관련 메소드를 만들어주는 방식을 이용해보자    
+아래와 그림과 같은 방법으로 클래스를 생성해주자    
+
+![JPA Service 만들기7](https://user-images.githubusercontent.com/50267433/84456770-cf891f80-ac9b-11ea-9477-0becff0ddf6c.PNG)
+![JPA Service 만들기8](https://user-images.githubusercontent.com/50267433/84456838-fb0c0a00-ac9b-11ea-85ab-59d2ee26142d.PNG)
+
+4. 클래스가 만들어졌는지 확인하고 아래와 같은 코드를 입력해주자.   
+
+**UserDAOJPA**
+```java
+package com.mycompany.myapp.dao.user;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Repository;
+
+import com.mycompany.myapp.dto.user.User;
+
+@Repository
+public class UserDAOJPA implements UserDAO {
+	
+	@PersistenceContext
+	private EntityManager jpa;
+	
+	@Override
+	public void insert(User vo) {
+		System.out.println("===> JPA로 insert() 기능처리");
+		jpa.persist(vo);
+	}
+
+	@Override
+	public void update(User vo) {
+		System.out.println("===> JPA로 update() 기능처리");
+		jpa.merge(vo);
+	}
+
+	@Override
+	public void delete(User vo) {
+		System.out.println("===> JPA로 delete() 기능처리");
+		jpa.remove(jpa.find(User.class, vo.getId()));
+	}
+
+	@Override
+	public User getOne(User vo) {
+		System.out.println("===> JPA로 getOne() 기능처리");
+		return (User) jpa.find(User.class, vo.getId());
+	}
+
+	@Override
+	public List<User> getAll() {
+		System.out.println("===> JPA로 getAll() 기능처리");
+		return jpa.createQuery("from User u order by u.id asc").getResultList();
+	}
+
+}
+```
+![JPA Service 만들기9](https://user-images.githubusercontent.com/50267433/84456891-268ef480-ac9c-11ea-920e-bc715c995aac.PNG)    
