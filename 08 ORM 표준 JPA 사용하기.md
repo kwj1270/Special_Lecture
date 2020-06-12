@@ -82,10 +82,10 @@ JPA를 잘 쓰려면 객체지향 프로그래밍과 관계형 데이터베이�
 
 1. 프로젝트 폴더에 마우스 오른쪽 클릭을 하고 ```Properties```를 클릭한다.     
 2. 옆 배너에서 ```Project Facets```를 클릭하고 JPA 체크박스를 체크해준다.      
-3. 아래에 Further configuration required.. 에러 텍스트 링크가 나오는데 해당 링크를 클릭한다.   
-4. 나오는 창에서 Type을 Uesr Library -> **Disable Library Configuration 으로 바꿔준다.**
-5. 이후 Further configuration availavle.. 이 뜨는지 확인해보고 apply 시켜준다.     
-6. src -> main -> resources -> META-INF -> pesristence.xml 이 생성된 것을 확인해주자      
+3. 아래에 ```Further configuration required..``` 에러 텍스트 링크가 나오는데 해당 링크를 클릭한다.   
+4. 나오는 창에서 Type을 ```Uesr Library ->``` **Disable Library Configuration 으로 바꿔준다.**
+5. 이후 ```Further configuration availavle..``` 이 뜨는지 확인해보고 apply 시켜준다.     
+6. ```src``` -> ```main``` -> ```resources``` -> ```META-INF``` -> ```pesristence.xml``` 이 생성된 것을 확인해주자      
 해당 파일은 우리가 DB 연결및 JPA를 **어떻게 동작 시킬것(How to do)** 인지에 관한 정의를 해주는 곳이다.    
 
 ![JPA 셋팅하기1](https://user-images.githubusercontent.com/50267433/84454622-052b0a00-ac96-11ea-9d40-2bc3b089a92a.PNG)
