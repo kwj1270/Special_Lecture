@@ -180,18 +180,35 @@ public class BoardController {
 }
 ///////////////////
 ```
-우선 큰 동작순서를 말하자면 아래와 같습니다.  
-   
-1. 서블릿 컨테이너에서 알맞는 객체 생성후 DispatcherServlet 실행          
-2. DispatcherServlet 에서 BoardController를 생성 및 메소드를 호출하고 객체를 메소드의 인자값으로 넘긴다.     
-3. 실행된 메소드를 살펴보면 Model 부분이 있고 View 부분이 있다.      
-         
-모델은 데이터를 처리하는 역할을 합니다.             
-대개 DAO를 기능을 통해서 얻은 결과값을 저장하는 역할로 사용이 됩니다.          
-그리고 이렇게 얻은 결과값을 View에 전달해서 이를 가지고 게시판, 게시판 리스트등을 만들 수 있습니다.       
        
-뷰는 말그대로 클라이언트에게 무언가를 보여주기 위한 코드입니다.          
-그런데 컨트롤러에서는 board만 리턴하는데 어떻게 동작을 하는 것일까요?      
+**우선 해당 클래스가 실행되는 과정**
+0. 위 코드에서 ```@Controller```로 인하여 BoardController 가 스프링 컨테이너에서 생성됨          
+1. DispatcherServlet appServlet 실행되면서 BoardController 를 의존성 주입받음 -> 즉, 사용가능       
+이 외에도 appServlet은 컨테이너에서 생성된 다른 객체들도 의존성 주입받아 사용할 수 있다.(Model model 등등)  
+2. BoardController의 메소드를 호출하고 알맞는 객체를 메소드의 인자값(매개 변수)으로 넘긴다. (Model model)           
+3. 메소드가 동작을 한다.
 
-1. 우선 "board" 는 DispatcherServlet 객체인 appServlet으로 리턴이 됩니다.       
-2. ```internalResourceViewResolver```의 메소드를 이용해서 리턴된 board와 알맞는 값들을 결합시켜준다.       
+**메소드 분석**
+모델은 데이터를 처리하는 역할을 합니다.               
+대개 DAO를 기능을 통해서 얻은 결과값을 저장하는 역할로 사용이 됩니다.            
+그리고 이렇게 얻은 결과값을 View에 전달해서 이를 가지고 게시판, 게시판 리스트등을 만들 수 있습니다.         
+             
+뷰는 말그대로 클라이언트에게 무언가를 보여주기 위한 코드입니다.              
+그런데 컨트롤러에서는 board만 리턴하는데 어떻게 동작을 하는 것일까요?             
+         
+1. 우선 "board" 는 DispatcherServlet 객체인 appServlet으로 리턴이 됩니다.                
+2. ```internalResourceViewResolver```의 메소드를 이용해서 리턴된 board와 알맞는 값들을 결합시켜준다.             
+```
+@Autowired											    
+BoardController boardController;						     		     
+
+@Autowired
+Model model;
+								  
+@Autowired                                                                                         
+InternalResourceViewResolver internalResourceViewResolver;  
+
+string url = internalResourceViewResolver.getPrefix() + boardController.home(model) +internalResourceViewResolver.getSuffix;
+```
+이렇게 생성된 url의 값은 ```"/WEB-INF/views/home.jsp"```이고 이 경로를 통해 해당 jsp를 호출하게 된다.    
+
