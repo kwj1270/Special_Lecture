@@ -184,7 +184,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mycompany.myapp.dto.board.Board;
 
-//@Repository
+@Repository
 public class BoardDAOMyBatis implements BoardDAO{
 	
 	@Autowired
