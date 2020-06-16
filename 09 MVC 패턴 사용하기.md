@@ -165,6 +165,7 @@ com.mycompany.myapp.Class_3 class_3;
 @Autowired
 InternalResourceViewResolver internalResourceViewResolver;
 ```
+**큰 그림()**
 ```java   
 --------------------------------------------- 컨테이너 -----------------------------------------------
 | com.mycompany.myapp.Class_1 class_1 = new Class_1(); 						     |
