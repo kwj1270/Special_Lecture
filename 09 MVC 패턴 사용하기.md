@@ -65,7 +65,7 @@ ___
 	</context-param>
 ```
 ```/WEB-INF/spring/root-context.xml``` 데이터베이스 환경 설정에 대한 xml이다.       
-**1.** 클라이언트가 서버에게 Request를 전송하면 가장 먼저 ```webapp -> WEB-INF``` 의 web.xml 이 실행된다.            
+**1.** 어플리케이션 실행시 ```webapp -> WEB-INF``` 의 web.xml 이 실행된다.            
 **2.** 서블릿 생성에는 여러 방식이 있는데 ```ContextLoaderListener```방식을 채용했다.         
 **3.** ```DispatcherServlet appServlet = new DispatcherServlet(ContextLoaderListener);```의 형태로 컨테이너에 만든다.        
 **4.** ContextLoaderListener 는 ```servlet-context.xml```의 정보를 가지고 있다. (해당 컨테이너 이용 가능)              
@@ -102,11 +102,76 @@ ___
 ContextConfigLocation contextConfigLocation = new ContextConfigLocation("/WEB-INF/spring/appServlet/servlet-context.xml");
 DispatcherServlet appServlet = new DispatcherServlet(contextConfigLocation); // <servlet-class> <servlet-name> = new <servlet-class>(param1); 
 appServlet.setLoad-on-startup(1); 
-```    
+```   
+
+## Request 요청이 들어 왔다면  
+url 요청이 들어오면 알맞는 서블릿을 실행한다.     
+예를 들어 ```http://localhost:8080/myapp/``` 나 ```http://localhost:8080/myapp/board``` 요청이 들어왔다 가정하자
+
+1. web.xml 에서 / 을 url 패턴으로 지정한 appServlet이 실행이 된다.  
+2. appSerlvet 은 servlet-context.xml을 기반으로 동작하는 객체이기에 해당 정보를 읽을 수 있다.  
+3. 즉 해당 servlet-context.xml로 만들어진 컨테이너로부터 의존성 주입을 받을 수 있다.   
+
+**servlet-context.xml**
+```xml
+~ 생략 ~ 
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven /> <!-- 어노테이션 사용을 허락하는 것 -->
+	<context:component-scan base-package="com.mycompany.myapp" /> <!-- 해당 패키지내의 모든 클래스를 훑어서  객체생성 어노테이션 있으면 컨테이너에 객체 생성-->    
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- Controller에서 리턴시에 붙여줌 -->
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+</beans:beans>
+```
+이를 간단히 설명하자면 
+1. ```<annotation-driven />``` 어노테이션 사용 가능하게함 
+2. ```<context:component-scan base-package="com.mycompany.myapp" />``` 해당 패키지내에 있는 클래스중     
+컨테이너에서 객체를 생성할 것들을 찾아서 생성해준다.     
+3. 컨테이너에 빈 등록을 할 것인데 클래스는 ```org.springframework.web.servlet.view.InternalResourceViewResolver```     
+4. 해당 객체의 prefix 변수에는 ```"/WEB-INF/views/"```를      
+5. 해당 객체의 suffix 변수에는 ```".jsp"```를 넣어준다.  
+
+이는 아래와 같다.
+
+**servlet-context로 만들어진 컨테이너**
+```java
+---------------------------------------------- 컨테이너 ----------------------------------------------
+| com.mycompany.myapp 에서 생성된 모든 객체들.... 						     |
+|												     |
+| InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();    |
+| internalResourceViewResolver.setPrefix("/WEB-INF/views/");					     |
+| internalResourceViewResolver.setSuffix(".jsp");						     |
+|----------------------------------------------------------------------------------------------------|
+```
+**DispatcherServlet 예시**    
+```java 
+@Autowired
+com.mycompany.myapp.Class class_1;
+
+@Autowired
+com.mycompany.myapp.Class_2 class_2;
+
+@Autowired
+com.mycompany.myapp.Class_3 class_3;
+.
+.
+.
+.
+.
+
+@Autowired
+InternalResourceViewResolver internalResourceViewResolver;
+```
+
+
+
    
-7. 즉, request 되면 ```web.xml``` -> ```root-context.xml``` -> ```servlet-context.xml```정보를 가진 appServlet 생성
-8.
-9.
 
 
 # 1. 기존 Controller 분석하기     
@@ -175,33 +240,8 @@ public class BoardController {
 **참고로 DispatcherServlet은 우리가 정의하지 않았습니다.**        
 **스프링 컨테이너에서 알아서 만들어주고 동작시켜주는 Servlet 입니다.(물론 생성 명령은 내려야함)**
 
-**web.xml에서 DispathcerServlet 생성을 위한 구문**
-```xml
-	<!-- Processes application requests -->
-	<servlet>
-		<servlet-name>appServlet</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-		
-	<servlet-mapping>
-		<servlet-name>appServlet</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
-```
 
-2. DispatcherServlet 은 ```webapp -> WEB-INF -> spring -> appServlet -> servlet-context.xml```의       
-```"org.springframework.web.servlet.view.InternalResourceViewResolver"``` 객체를 의존성 주입받는다.        
-      
-**DispatcherServlet 예시**    
-```java 
-@Autowired
-InternalResourceViewResolver internalResourceViewResolver;
-```
+
 3. ```internalResourceViewResolver```의 메소드를 이용해서 리턴된 board와 알맞는 값들을 결합시켜준다.       
 board 와 결합될 부분은 ```webapp -> WEB-INF -> spring -> appServlet -> servlet-context.xml```에 정의되어 있다.     
      
