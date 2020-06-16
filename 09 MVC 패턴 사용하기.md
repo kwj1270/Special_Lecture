@@ -165,10 +165,32 @@ com.mycompany.myapp.Class_3 class_3;
 @Autowired
 InternalResourceViewResolver internalResourceViewResolver;
 ```
+```java   
+--------------------------------------------- 컨테이너 -----------------------------------------------
+| com.mycompany.myapp.Class_1 class_1 = new Class_1(); 						     |
+| .												     |
+| .												     |
+| .												     |
+|												     |
+| InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();    |
+| internalResourceViewResolver.setPrefix("/WEB-INF/views/");					     |
+| internalResourceViewResolver.setSuffix(".jsp");						     |
+|----------------------------------------------------------------------------------------------------|	
+						|
+						|
+						↓
+---------------------------------------------- appServlet ----------------------------------------------
+| @Autowired											     |
+| com.mycompany.myapp.Class class_1;						     		     |
+| .												     |
+| .												     |
+| .												     |
+| @Autowired                                                                                         |
+| InternalResourceViewResolver internalResourceViewResolver;                                         |
+|----------------------------------------------------------------------------------------------------|
+```
 
-
-
-# 1. 기존 Controller 분석하기     
+# 1. 기존 Controller로 동작 분석하기     
 Controller는 
 1. 모델에 관련된 명령을 보냄으로써 모델을 생성 또는 변경할 수 있다.                               
 2. 뷰와 관련된 명령을 보냄으로써 뷰를 출력 할 수 도 있다.                            
@@ -230,20 +252,5 @@ public class BoardController {
 뷰는 말그대로 클라이언트에게 무언가를 보여주기 위한 코드입니다.          
 그런데 컨트롤러에서는 board만 리턴하는데 어떻게 동작을 하는 것일까요?      
 
-1. 우선 "board" 는 DispatcherServlet 객체로 리턴이 됩니다.       
-**참고로 DispatcherServlet은 우리가 정의하지 않았습니다.**        
-**스프링 컨테이너에서 알아서 만들어주고 동작시켜주는 Servlet 입니다.(물론 생성 명령은 내려야함)**
-
-
-
-3. ```internalResourceViewResolver```의 메소드를 이용해서 리턴된 board와 알맞는 값들을 결합시켜준다.       
-board 와 결합될 부분은 ```webapp -> WEB-INF -> spring -> appServlet -> servlet-context.xml```에 정의되어 있다.     
-     
-**servlet-context.xml 예시**  
-```xml
-~ 생략 ~ 
-	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
-	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- Controller에서 리턴시에 붙여줌 -->
-		<beans:property name="prefix" value="/WEB-INF/views/" />
-		<beans:property name="suffix" value=".jsp" />
-```
+1. 우선 "board" 는 DispatcherServlet 객체인 appServlet으로 리턴이 됩니다.       
+2. ```internalResourceViewResolver```의 메소드를 이용해서 리턴된 board와 알맞는 값들을 결합시켜준다.       
