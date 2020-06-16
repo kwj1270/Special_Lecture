@@ -95,8 +95,8 @@ import org.springframework.stereotype.Repository;
 import com.mycompany.myapp.dao.util.JDBCUtil;
 import com.mycompany.myapp.dto.board.Board;
 
-@Repository("boardDAOJDBC")
-public class BoardDAOJDBC {
+@Repository
+public class BoardDAOJDBC implements BoardDAO {
 	// JDBC 관련 변수
 	private Connection conn = null;
 	private PreparedStatement pstmt = null;
@@ -106,12 +106,13 @@ public class BoardDAOJDBC {
 			+ "VALUES((SELECT nvl(max(seq),0)+1 FROM board),?,?,?);"; // AUTOINCREMENT 기능 직접 추가
 	// nvl(인자1, 인자2) 인자1이 null일 경우 인자2를 사용하겠다는 뜻
 	private final String BOARD_UPDATE = "UPDATE BOARD SET title=?, content=? WHERE seq=?;";
-	private final String BOARD_DELETE = "DELETE BOARD WHERE seq=?;";
+	private final String BOARD_DELETE = "DELETE FROM BOARD WHERE seq=?;";
 	private final String BOARD_GET = "SELECT * FROM board WHERE seq=?;";
 	private final String BOARD_LIST = "SELECT * FROM board ORDER BY seq DESC;";
 
 
-	public void insert(Board vo) {
+	@Override
+	public int insert(Board vo) {
 		System.out.println("===> JDBC로 insertBoard() 기능 처리");
 		try {
 			conn = JDBCUtil.getConnection();
@@ -119,15 +120,17 @@ public class BoardDAOJDBC {
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getWriter());
 			pstmt.setString(3, vo.getContent());
-			pstmt.executeUpdate();
+			return pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			JDBCUtil.close(pstmt, conn);
 		}
+		return -1;
 	}
 
-	public void update(Board vo) {
+	@Override
+	public int update(Board vo) {
 		System.out.println("===> JDBC로 updateBoard() 기능 처리");
 		try {
 			conn = JDBCUtil.getConnection();
@@ -135,28 +138,32 @@ public class BoardDAOJDBC {
 			pstmt.setString(1, vo.getTitle());
 			pstmt.setString(2, vo.getContent());
 			pstmt.setInt(3, vo.getSeq());
-			pstmt.executeUpdate();
+			return pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			JDBCUtil.close(pstmt, conn);
 		}
+		return -1;
 	}
 
-	public void delete(Board vo) {
+	@Override
+	public int delete(Board vo) {
 		System.out.println("===> JDBC로 deleteBoard() 기능 처리");
 		try {
 			conn = JDBCUtil.getConnection();
 			pstmt = conn.prepareStatement(BOARD_DELETE);
 			pstmt.setInt(1, vo.getSeq());
-			pstmt.executeUpdate();
+			return pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			JDBCUtil.close(pstmt, conn);
 		}
+		return -1;
 	}
 
+	@Override
 	public Board getOne(Board vo) {
 		System.out.println("===> JDBC로 getBoard() 기능 처리");
 		Board board = null;
@@ -183,6 +190,7 @@ public class BoardDAOJDBC {
 		return board;
 	}
 
+	@Override
 	public List<Board> getAll() {
 		System.out.println("===> JDBC로 getBoardList()기능 처리");
 		List<Board> boardList = new ArrayList<Board>();
@@ -230,11 +238,11 @@ import com.mycompany.myapp.dto.board.Board;
 
 public interface BoardDAO {
 
-	void insert(Board vo);
+	int insert(Board vo);
 
-	void update(Board vo);
+	int update(Board vo);
 
-	void delete(Board vo);
+	int delete(Board vo);
 
 	Board getOne(Board vo);
 
@@ -269,30 +277,26 @@ public class BoardService{
 	@Autowired
 	BoardDAO dao;
 
+	public int insert(Board vo) {
+		return dao.insert(vo);
+	}
 	
-	public void insert(Board vo) {
-		dao.insert(vo);
+	public int update(Board vo) {
+		return dao.update(vo);
 	}
 
-	
-	public void update(Board vo) {
-		dao.update(vo);
+	public int delete(Board vo) {
+		return dao.delete(vo);
 	}
-
-	
-	public void delete(Board vo) {
-		dao.delete(vo);
-	}
-
 	
 	public Board getOne(Board vo) {
 		return dao.getOne(vo);
 	}
-
+	
 	public List<Board> getAll() {
-		return dao.getAll(vo);
+		return dao.getAll();
 	}
-		
+	
 }
 ```
 Service 클래스를 만들면서 한가지 의문점이 있다.       
@@ -353,7 +357,7 @@ ________________________
 .... 100 개의 파일이 있다.   
 ```
 
-# 5. Controller 클래스 생성   
+# 5.1. 일반 Controller 클래스 생성   
 1. 우선 myapp 밑에 controller 폴더를 만들어준다.       
 2. 그 다음에 controller 밑에 board 폴더를 만들어준다.       
 3. 그리고 BoardController 이름을 가지는 클래스를 만들어준다.         
@@ -374,12 +378,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.mycompany.myapp.HomeController;
+import com.mycompany.myapp.dto.board.Board;
 import com.mycompany.myapp.service.board.BoardService;
 
+////// 컨트롤러 //////
 @Controller
 public class BoardController {
 	
@@ -389,14 +396,94 @@ public class BoardController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
 	@RequestMapping(value = "/board", method = RequestMethod.GET)
-	public String home(Model model) {
-		model.addAttribute("boards", service.getAll());
-		return "board";
+	public String home(Model model) { // 모델 생성
+		// 모델 부분 //  
+		model.addAttribute("boards", service.getAll()); // 모델 호출 및 상태 변경
+		////////////
+		
+		// view 부분//
+		return "board"; // 뷰 출력
+		/////////////
+	}
+	
+	@RequestMapping(value = "/board/{seq}", method = RequestMethod.GET)
+	public String detail(@PathVariable int seq ,Model model) { // 모델 생성
+		Board vo = new Board();
+		vo.setSeq(seq);
+		// 모델 부분 //  
+		model.addAttribute("board", service.getOne(vo)); // 모델 호출 및 상태 변경
+		////////////
+		
+		// view 부분//
+		return "board-detail"; // 뷰 출력
+		/////////////
+	}
+	
+}
+///////////////////
+```
+
+# 5.2. 일반 RestController 클래스 생성   
+
+1. controller를 생성해줬던 폴더에 BoardAPIController 클래스를 생성해준다.    
+2. 아래 코드와 같이 입력해준다.        
+      
+**BoardAPIController**
+```java
+package com.mycompany.myapp.controller.board;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.mycompany.myapp.dto.board.Board;
+import com.mycompany.myapp.dto.user.User;
+import com.mycompany.myapp.service.board.BoardService;
+import com.mycompany.myapp.service.user.UserService;
+
+@RestController
+public class BoardAPIController {
+
+	@Autowired
+	BoardService service;
+	
+	@PostMapping("/api/v1/board")
+	public int insert(@RequestBody Board vo) {
+		return service.insert(vo);
+	}
+
+	@PutMapping("/api/v1/board/{seq}")
+	public int update(@PathVariable int seq) {
+		Board vo = new Board();
+		vo.setSeq(seq);
+		return service.insert(vo);
+	}
+	
+	@GetMapping("/api/v1/board/{seq}")
+	public Board getOne(@PathVariable int seq) {
+		Board vo = new Board();
+		vo.setSeq(seq);
+		return service.getOne(vo);
+	}
+	
+	@DeleteMapping("/api/v1/board/{seq}")
+	public int delete(@PathVariable int seq) {
+		Board vo = new Board();
+		vo.setSeq(seq);
+		return service.delete(vo);
 	}
 	
 }
 ```
-
+```@RestController```는 리턴을 페이지가 아닌 값 자체를 리턴한다.     
+즉, ```@Controller```는 jsp 파일을 리턴, ```@RestController```는 DB처리로 인한 값을 리턴   
+     
 # 6. pom.xml 에 라이브러리 추가하기  
 기존에 pom.xml 은 라이브러리를 추가하는 방법을 위해 h2 데이터베이스 라이브러리를 제외하고 제공드렸습니다.    
 이제 아래 코드를 pom.xml에 추가해봅시다.        
