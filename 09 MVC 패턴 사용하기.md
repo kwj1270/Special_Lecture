@@ -114,7 +114,6 @@ url 요청이 들어오면 알맞는 서블릿을 실행한다.
 
 **servlet-context.xml**
 ```xml
-~ 생략 ~ 
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven /> <!-- 어노테이션 사용을 허락하는 것 -->
 	<context:component-scan base-package="com.mycompany.myapp" /> <!-- 해당 패키지내의 모든 클래스를 훑어서  객체생성 어노테이션 있으면 컨테이너에 객체 생성-->    
@@ -127,20 +126,18 @@ url 요청이 들어오면 알맞는 서블릿을 실행한다.
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
-</beans:beans>
 ```
 이를 간단히 설명하자면 
-1. ```<annotation-driven />``` 어노테이션 사용 가능하게함 
-2. ```<context:component-scan base-package="com.mycompany.myapp" />``` 해당 패키지내에 있는 클래스중     
-컨테이너에서 객체를 생성할 것들을 찾아서 생성해준다.     
-3. 컨테이너에 빈 등록을 할 것인데 클래스는 ```org.springframework.web.servlet.view.InternalResourceViewResolver```     
+1. ```<annotation-driven />``` 어노테이션 사용 가능하게함 -> appServlet에서 ```@Autowired``` 사용 가능
+2. ```<context:component-scan base-package="com.mycompany.myapp" />``` 컨테이너에 생성할 객체를 해당 경로에서 찾는다     
+3. 컨테이너에 객체 등록을 할 것인데 클래스는 ```org.springframework.web.servlet.view.InternalResourceViewResolver```     
 4. 해당 객체의 prefix 변수에는 ```"/WEB-INF/views/"```를      
 5. 해당 객체의 suffix 변수에는 ```".jsp"```를 넣어준다.  
 
 이는 아래와 같다.
 
-**servlet-context로 만들어진 컨테이너**
-```java
+**servlet-context로 만들어진 컨테이너에서의 동작 표현**   
+```java   
 ---------------------------------------------- 컨테이너 ----------------------------------------------
 | com.mycompany.myapp 에서 생성된 모든 객체들.... 						     |
 |												     |
@@ -148,7 +145,7 @@ url 요청이 들어오면 알맞는 서블릿을 실행한다.
 | internalResourceViewResolver.setPrefix("/WEB-INF/views/");					     |
 | internalResourceViewResolver.setSuffix(".jsp");						     |
 |----------------------------------------------------------------------------------------------------|
-```
+```   
 **DispatcherServlet 예시**    
 ```java 
 @Autowired
@@ -169,9 +166,6 @@ com.mycompany.myapp.Class_3 class_3;
 InternalResourceViewResolver internalResourceViewResolver;
 ```
 
-
-
-   
 
 
 # 1. 기존 Controller 분석하기     
