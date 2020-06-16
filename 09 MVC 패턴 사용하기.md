@@ -62,31 +62,6 @@ ___
 **4.** ContextLoaderListener 는 ```servlet-context.xml```의 정보를 가지고 있다. (해당 컨테이너 이용 가능)              
 **5.** 이렇게 여러 서블릿을 만들 수 있는데 해당 서블릿에 대해 실행 우선순위를 1로 준다.           
 **6.** 그리고 해당 서블릿은 url의 맨 앞에 ```/```가 들어갈때 실행한다. (즉 모든 구간 사용)   
-  
-**web.xml의 일부분**
-```xml
-	<!-- Creates the Spring Container shared by all Servlets and Filters -->
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-	<!-- 서블릿 생성 방식이 여러개인다 Cotext.LoaderListener 방식 채용 -->
-
-	<servlet>
-		<servlet-name>appServlet</servlet-name> <!-- 변수 이름은 appServlet -->
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class> <!-- DispatcherServlet 타입이다. -->
-		<init-param>
-			<param-name>contextConfigLocation</param-name> <!-- 파라미터 이름 -->
-			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value> <!-- 아래 xml을 값-->
-		</init-param>
-		<load-on-startup>1</load-on-startup> <!-- 우선순위 1 -->
-	</servlet>
-
-	<!-- 서블릿 실행 조건 url -->	
-	<servlet-mapping>
-		<servlet-name>appServlet</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
-```
     
 **스프링 컨테이너에서 동작된다면 아마 아래와 같이 동작 될 것**   
 ```java
@@ -97,7 +72,7 @@ appServlet.setLoad-on-startup(1);
 
 ## Request 요청이 들어 왔다면  
 url 요청이 들어오면 알맞는 서블릿을 실행한다.     
-예를 들어 ```http://localhost:8080/myapp/``` 나 ```http://localhost:8080/myapp/board``` 요청이 들어왔다 가정하자
+예를 들어 ```http://localhost:8080/myapp/board``` 요청이 들어왔다 가정하자
 
 1. web.xml 에서 / 을 url 패턴으로 지정한 appServlet이 실행이 된다.  
 2. appSerlvet 은 servlet-context.xml을 기반으로 동작하는 객체이기에 해당 정보를 읽을 수 있다.  
@@ -118,12 +93,12 @@ url 요청이 들어오면 알맞는 서블릿을 실행한다.
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 ```
-이를 간단히 설명하자면 
-1. ```<annotation-driven />``` 어노테이션 사용 가능하게함 -> appServlet에서 ```@Autowired``` 사용 가능
-2. ```<context:component-scan base-package="com.mycompany.myapp" />``` 컨테이너에 생성할 객체를 해당 경로에서 찾는다     
-3. 컨테이너에 객체 등록을 할 것인데 클래스는 ```org.springframework.web.servlet.view.InternalResourceViewResolver```     
-4. 해당 객체의 prefix 변수에는 ```"/WEB-INF/views/"```를      
-5. 해당 객체의 suffix 변수에는 ```".jsp"```를 넣어준다.  
+소스 코드를 설명하자면 
+* ```<annotation-driven />``` 어노테이션 사용 가능하게함 -> appServlet에서 ```@Autowired``` 사용 가능
+* ```<context:component-scan base-package="com.mycompany.myapp" />``` 컨테이너에 생성할 객체를 해당 경로에서 찾는다     
+* 컨테이너에 객체 등록을 할 것인데 클래스는 ```org.springframework.web.servlet.view.InternalResourceViewResolver```     
+* 해당 객체의 prefix 변수에는 ```"/WEB-INF/views/"```를      
+* 해당 객체의 suffix 변수에는 ```".jsp"```를 넣어준다.  
 
 이는 아래와 같다.
    
