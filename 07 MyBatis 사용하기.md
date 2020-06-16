@@ -33,7 +33,6 @@ jdbc.password=1234
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="BoardDAO">
-	
 	<resultMap id="boardResult" type="board">
 		<id property="seq" column="SEQ" />
 		<result property="title" column="TITLE" />
@@ -52,7 +51,7 @@ jdbc.password=1234
 	</update>
 
 	<delete id="delete">
-		DELETE board WHERE seq = #{seq}
+		DELETE FROM board WHERE seq=#{seq}
 	</delete>
 
 	<select id="getOne" resultType="board">
@@ -185,25 +184,22 @@ import org.springframework.stereotype.Repository;
 
 import com.mycompany.myapp.dto.board.Board;
 
-@Repository
+//@Repository
 public class BoardDAOMyBatis implements BoardDAO{
 	
 	@Autowired
 	private SqlSessionTemplate mybatis;
 
-	public void insert(Board vo) {
-		mybatis.insert("BoardDAO.insert", vo);
-		mybatis.commit();
+	public int insert(Board vo) {
+		return mybatis.insert("BoardDAO.insert", vo);
 	}
 
-	public void update(Board vo) {
-		mybatis.update("BoardDAO.update", vo);
-		mybatis.commit();
+	public int update(Board vo) {
+		return mybatis.update("BoardDAO.update", vo);
 	}
 
-	public void delete(Board vo) {
-		mybatis.delete("BoardDAO.delete", vo);
-		mybatis.commit();
+	public int delete(Board vo) {
+		return mybatis.delete("BoardDAO.delete", vo);
 	}
 
 	public Board getOne(Board vo) {
