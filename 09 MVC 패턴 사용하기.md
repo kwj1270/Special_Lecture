@@ -129,6 +129,7 @@ url 요청이 들어오면 알맞는 서블릿을 실행한다.
 | InternalResourceViewResolver internalResourceViewResolver;                                         |
 |----------------------------------------------------------------------------------------------------|
 ```
+![의존성 주입](https://user-images.githubusercontent.com/50267433/84725187-fc537480-afc4-11ea-9360-b0be1c5318a6.PNG)
 
 # 1. 기존 Controller로 동작 분석하기     
 Controller는 
