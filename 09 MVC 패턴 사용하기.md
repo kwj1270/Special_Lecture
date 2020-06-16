@@ -8,9 +8,9 @@ MVC는 Model-View-Controller의 약자입니다.
 개발할 때 3가지 형태로 구분하여 개발하는 소프트웨어 개발 방법론입니다.       
      
 그 3가지 요소를 설명하면
-**Model :** 무엇을 할지 정의합니다. 비지니스 로직에서의 알고리즘, 데이터 등의 기능을 처합니다.
-**Controller :** 어떻게 할지를 정의합니다. 화면의 처리기능과 Model과 View를 연결시켜주는 연활을 하지요. 
-**View :** 화면을 보여주는 역할을 합니다. 웹이라면 웹페이지, 모바일이라면 어플의 화면의 보여지는 부분입니다.
+**Model :** 무엇을 할지 정의합니다. 비지니스 로직에서의 알고리즘, 데이터 등의 기능을 처리합니다.      
+**Controller :** 어떻게 할지를 정의합니다. 화면의 처리기능과 Model과 View를 연결시켜주는 역할을 합니다.       
+**View :** 화면을 보여주는 역할을 합니다. 웹이라면 웹페이지, 모바일이라면 어플의 화면의 보여지는 부분입니다.     
 
 # 소스 코드 동작 구조   
 ## 가장 먼저 실행되는 web.xml    
@@ -53,14 +53,24 @@ MVC는 Model-View-Controller의 약자입니다.
 
 </web-app>
 ```
-
-      
-1. 클라이언트가 서버에게 Request를 전송하면 가장 먼저 ```webapp -> WEB-INF``` 의 web.xml 이 실행된다.            
-2. 서블릿 생성에는 여러 방식이 있는데 ```ContextLoaderListener```방식을 채용했다.         
-3. ```DispatcherServlet appServlet = new DispatcherServlet(ContextLoaderListener);```의 형태로 컨테이너에 만든다.        
-4. ContextLoaderListener 는 ```servlet-context.xml```의 정보를 가지고 있다. (해당 컨테이너 이용 가능)              
-5. 이렇게 여러 서블릿을 만들 수 있는데 해당 서블릿에 대해 실행 우선순위를 1로 준다.           
-6. 그리고 해당 서블릿은 url의 맨 앞에 ```/```가 들어갈때 실행한다. (즉 모든 구간 사용)   
+___
+**0.** 실행 우선순위 0 순위로 ```/WEB-INF/spring/root-context.xml``` 의 정보를 가진 contextConfigLocation을 만든다.    
+   
+**web.xml**
+```xml
+	<!-- 우선적으로 실행될 xml 지정 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+```
+```/WEB-INF/spring/root-context.xml``` 데이터베이스 환경 설정에 대한 xml이다.       
+**1.** 클라이언트가 서버에게 Request를 전송하면 가장 먼저 ```webapp -> WEB-INF``` 의 web.xml 이 실행된다.            
+**2.** 서블릿 생성에는 여러 방식이 있는데 ```ContextLoaderListener```방식을 채용했다.         
+**3.** ```DispatcherServlet appServlet = new DispatcherServlet(ContextLoaderListener);```의 형태로 컨테이너에 만든다.        
+**4.** ContextLoaderListener 는 ```servlet-context.xml```의 정보를 가지고 있다. (해당 컨테이너 이용 가능)              
+**5.** 이렇게 여러 서블릿을 만들 수 있는데 해당 서블릿에 대해 실행 우선순위를 1로 준다.           
+**6.** 그리고 해당 서블릿은 url의 맨 앞에 ```/```가 들어갈때 실행한다. (즉 모든 구간 사용)   
   
 **web.xml의 일부분**
 ```xml
@@ -92,19 +102,7 @@ MVC는 Model-View-Controller의 약자입니다.
 ContextConfigLocation contextConfigLocation = new ContextConfigLocation("/WEB-INF/spring/appServlet/servlet-context.xml");
 DispatcherServlet appServlet = new DispatcherServlet(contextConfigLocation); // <servlet-class> <servlet-name> = new <servlet-class>(param1); 
 appServlet.setLoad-on-startup(1); 
-```   
-
-7. 우선순위 0순위로 ```/WEB-INF/spring/root-context.xml``` 의 정보를 가진 contextConfigLocation을 만든다.  
-
-**web.xml**
-```xml
-	<!-- 우선적으로 실행될 xml 지정 -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml</param-value>
-	</context-param>
-```
-```/WEB-INF/spring/root-context.xml``` 데이터베이스 환경 설정에 대한 xml이다.   
+```    
    
 7. 즉, request 되면 ```web.xml``` -> ```root-context.xml``` -> ```servlet-context.xml```정보를 가진 appServlet 생성
 8.
