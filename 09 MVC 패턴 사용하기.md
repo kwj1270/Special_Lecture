@@ -60,6 +60,7 @@ MVC는 Model-View-Controller의 약자입니다.
 3. ```DispatcherServlet appServlet = new DispatcherServlet(ContextLoaderListener);```의 형태로 컨테이너에 만든다.        
 4. ContextLoaderListener 는 ```servlet-context.xml```의 정보를 가지고 있다. (해당 컨테이너 이용 가능)              
 5. 이렇게 여러 서블릿을 만들 수 있는데 해당 서블릿에 대해 실행 우선순위를 1로 준다.           
+6. 그리고 해당 서블릿은 url의 맨 앞에 ```/```가 들어갈때 실행한다. (즉 모든 구간 사용)   
   
 **web.xml의 일부분**
 ```xml
@@ -78,26 +79,20 @@ MVC는 Model-View-Controller의 약자입니다.
 		</init-param>
 		<load-on-startup>1</load-on-startup> <!-- 우선순위 1 -->
 	</servlet>
-```
-    
-**스프링 컨테이너**
-```java
-ContextConfigLocation contextConfigLocation = new ContextConfigLocation("/WEB-INF/spring/appServlet/servlet-context.xml");
-DispatcherServlet appServlet = new DispatcherServlet(contextConfigLocation);
-appServlet.setLoad-on-startup(1);
 
-<servlet-class> <servlet-name> = new <servlet-class>(param1, param2, load-on-startup);  
-```   
-6. 그리고 해당 서블릿은 url의 맨 앞에 ```/```가 들어갈때 실행한다. (즉 모든 구간 사용)   
-
-**web.xml 일부분**
-```xml
 	<!-- 서블릿 실행 조건 url -->	
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 ```
+    
+**스프링 컨테이너에서 동작된다면 아마 아래와 같이 동작 될 것**   
+```java
+ContextConfigLocation contextConfigLocation = new ContextConfigLocation("/WEB-INF/spring/appServlet/servlet-context.xml");
+DispatcherServlet appServlet = new DispatcherServlet(contextConfigLocation); // <servlet-class> <servlet-name> = new <servlet-class>(param1); 
+appServlet.setLoad-on-startup(1); 
+```   
 
 7. 우선순위 0순위로 ```/WEB-INF/spring/root-context.xml``` 의 정보를 가진 contextConfigLocation을 만든다.  
 
