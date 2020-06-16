@@ -163,30 +163,30 @@ public class BoardDAOTemplate implements BoardDAO{
 	// SQL 명령어들
 	private final String BOARD_INSERT = "insert into board(seq, title, writer, content) values((select nvl(max(seq), 0)+1 from board),?,?,?)";
 	private final String BOARD_UPDATE = "update board set title=?, content=? where seq=?";
-	private final String BOARD_DELETE = "delete board where seq=?";
+	private final String BOARD_DELETE = "delete from board where seq=?";
 	private final String BOARD_GET = "select * from board where seq=?";
 	private final String BOARD_LIST = "select * from board order by seq desc";
 
 	// CRUD 기능의 메소드 구현
 	// 글 등록
 	@Override
-	public void insert(Board vo) {
+	public int insert(Board vo) {
 		System.out.println("===> Spring JDBC로 insertBoard() 기능 처리");
-		jdbcTemplate.update(BOARD_INSERT, vo.getTitle(), vo.getWriter(), vo.getContent());
+		return jdbcTemplate.update(BOARD_INSERT, vo.getTitle(), vo.getWriter(), vo.getContent());
 	}
 
 	// 글 수정
 	@Override
-	public void update(Board vo) {
+	public int update(Board vo) {
 		System.out.println("===> Spring JDBC로 updateBoard() 기능 처리");
-		jdbcTemplate.update(BOARD_UPDATE, vo.getTitle(), vo.getContent(), vo.getSeq());
+		return jdbcTemplate.update(BOARD_UPDATE, vo.getTitle(), vo.getContent(), vo.getSeq());
 	}
 
 	// 글 삭제
 	@Override
-	public void delete(Board vo) {
+	public int delete(Board vo) {
 		System.out.println("===> Spring JDBC로 deleteBoard() 기능 처리");
-		jdbcTemplate.update(BOARD_DELETE, vo.getSeq());
+		return jdbcTemplate.update(BOARD_DELETE, vo.getSeq());
 	}
 
 	// 글 상세 조회
