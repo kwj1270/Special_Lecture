@@ -13,12 +13,55 @@ MVC는 Model-View-Controller의 약자입니다.
 **View :** 화면을 보여주는 역할을 합니다. 웹이라면 웹페이지, 모바일이라면 어플의 화면의 보여지는 부분입니다.
 
 # 소스 코드 동작 구조   
-    
-1. 클라이언트가 서버에게 Request를 전송하면 가장 먼저 web.xml 이 실행된다.        
-2. 서블릿 생성에는 여러 방식이 있는데 ```ContextLoaderListener```방식을 채용했다.    
-3. ```DispatcherServlet appServlet = new DispatcherServlet(ContextLoaderListener);```의 형태로 컨테이너에 만든다.    
-4. ContextLoaderListener 는 ```servlet-context.xml```의 정보를 가지고 있다.       
-5. 이렇게 여러 서블릿을 만들 수 있는데 해당 서블릿에 대해 실행 우선순위를 1로 준다.        
+## 가장 먼저 실행되는 web.xml    
+
+**web.xml**
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<!-- 우선적으로 실행될 xml 지정 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Processes application requests -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<!-- 서블릿 실행 조건 url -->	
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+</web-app>
+```
+
+      
+1. 클라이언트가 서버에게 Request를 전송하면 가장 먼저 ```webapp -> WEB-INF``` 의 web.xml 이 실행된다.            
+2. 서블릿 생성에는 여러 방식이 있는데 ```ContextLoaderListener```방식을 채용했다.         
+3. ```DispatcherServlet appServlet = new DispatcherServlet(ContextLoaderListener);```의 형태로 컨테이너에 만든다.        
+4. ContextLoaderListener 는 ```servlet-context.xml```의 정보를 가지고 있다. (해당 컨테이너 이용 가능)              
+5. 이렇게 여러 서블릿을 만들 수 있는데 해당 서블릿에 대해 실행 우선순위를 1로 준다.           
+  
+**web.xml의 일부분**
 ```xml
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
@@ -45,12 +88,30 @@ appServlet.setLoad-on-startup(1);
 
 <servlet-class> <servlet-name> = new <servlet-class>(param1, param2, load-on-startup);  
 ```   
+6. 그리고 해당 서블릿은 url의 맨 앞에 ```/```가 들어갈때 실행한다. (즉 모든 구간 사용)   
 
-3.
-4.
-5.
-6.
-7.
+**web.xml 일부분**
+```xml
+	<!-- 서블릿 실행 조건 url -->	
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+```
+
+7. 우선순위 0순위로 ```/WEB-INF/spring/root-context.xml``` 의 정보를 가진 contextConfigLocation을 만든다.  
+
+**web.xml**
+```xml
+	<!-- 우선적으로 실행될 xml 지정 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+```
+```/WEB-INF/spring/root-context.xml``` 데이터베이스 환경 설정에 대한 xml이다.   
+   
+7. 즉, request 되면 ```web.xml``` -> ```root-context.xml``` -> ```servlet-context.xml```정보를 가진 appServlet 생성
 8.
 9.
 
