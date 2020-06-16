@@ -12,6 +12,49 @@ MVC는 Model-View-Controller의 약자입니다.
 **Controller :** 어떻게 할지를 정의합니다. 화면의 처리기능과 Model과 View를 연결시켜주는 연활을 하지요. 
 **View :** 화면을 보여주는 역할을 합니다. 웹이라면 웹페이지, 모바일이라면 어플의 화면의 보여지는 부분입니다.
 
+# 소스 코드 동작 구조   
+    
+1. 클라이언트가 서버에게 Request를 전송하면 가장 먼저 web.xml 이 실행된다.        
+2. 서블릿 생성에는 여러 방식이 있는데 ```ContextLoaderListener```방식을 채용했다.    
+3. ```DispatcherServlet appServlet = new DispatcherServlet(ContextLoaderListener);```의 형태로 컨테이너에 만든다.    
+4. ContextLoaderListener 는 ```servlet-context.xml```의 정보를 가지고 있다.       
+5. 이렇게 여러 서블릿을 만들 수 있는데 해당 서블릿에 대해 실행 우선순위를 1로 준다.        
+```xml
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<!-- 서블릿 생성 방식이 여러개인다 Cotext.LoaderListener 방식 채용 -->
+
+	<servlet>
+		<servlet-name>appServlet</servlet-name> <!-- 변수 이름은 appServlet -->
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class> <!-- DispatcherServlet 타입이다. -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name> <!-- 파라미터 이름 -->
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value> <!-- 아래 xml을 값-->
+		</init-param>
+		<load-on-startup>1</load-on-startup> <!-- 우선순위 1 -->
+	</servlet>
+```
+    
+**스프링 컨테이너**
+```java
+ContextConfigLocation contextConfigLocation = new ContextConfigLocation("/WEB-INF/spring/appServlet/servlet-context.xml");
+DispatcherServlet appServlet = new DispatcherServlet(contextConfigLocation);
+appServlet.setLoad-on-startup(1);
+
+<servlet-class> <servlet-name> = new <servlet-class>(param1, param2, load-on-startup);  
+```   
+
+3.
+4.
+5.
+6.
+7.
+8.
+9.
+
+
 # 1. 기존 Controller 분석하기     
 Controller는 
 1. 모델에 관련된 명령을 보냄으로써 모델을 생성 또는 변경할 수 있다.                               
