@@ -54,17 +54,8 @@ MVC는 Model-View-Controller의 약자입니다.
 </web-app>
 ```
 ___
-**0.** 실행 우선순위 0 순위로 ```/WEB-INF/spring/root-context.xml``` 의 정보를 가진 contextConfigLocation을 만든다.    
-   
-**web.xml**
-```xml
-	<!-- 우선적으로 실행될 xml 지정 -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml</param-value>
-	</context-param>
-```
-```/WEB-INF/spring/root-context.xml``` 데이터베이스 환경 설정에 대한 xml이다.       
+**0.** 실행 우선순위 0 순위로 ```/WEB-INF/spring/root-context.xml``` 의 정보를 가진 contextConfigLocation을 만든다.       
+```/WEB-INF/spring/root-context.xml``` 데이터베이스 환경 설정에 대한 xml이다.          
 **1.** 어플리케이션 실행시 ```webapp -> WEB-INF``` 의 web.xml 이 실행된다.            
 **2.** 서블릿 생성에는 여러 방식이 있는데 ```ContextLoaderListener```방식을 채용했다.         
 **3.** ```DispatcherServlet appServlet = new DispatcherServlet(ContextLoaderListener);```의 형태로 컨테이너에 만든다.        
@@ -135,40 +126,13 @@ url 요청이 들어오면 알맞는 서블릿을 실행한다.
 5. 해당 객체의 suffix 변수에는 ```".jsp"```를 넣어준다.  
 
 이는 아래와 같다.
-
-**servlet-context로 만들어진 컨테이너에서의 동작 표현**   
-```java   
----------------------------------------------- 컨테이너 ----------------------------------------------
-| com.mycompany.myapp 에서 생성된 모든 객체들.... 						     |
-|												     |
-| InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();    |
-| internalResourceViewResolver.setPrefix("/WEB-INF/views/");					     |
-| internalResourceViewResolver.setSuffix(".jsp");						     |
-|----------------------------------------------------------------------------------------------------|
-```   
-**DispatcherServlet 예시**    
-```java 
-@Autowired
-com.mycompany.myapp.Class class_1;
-
-@Autowired
-com.mycompany.myapp.Class_2 class_2;
-
-@Autowired
-com.mycompany.myapp.Class_3 class_3;
-.
-.
-.
-.
-.
-
-@Autowired
-InternalResourceViewResolver internalResourceViewResolver;
-```
-**큰 그림()**
+   
+**구조**
 ```java   
 --------------------------------------------- 컨테이너 -----------------------------------------------
 | com.mycompany.myapp.Class_1 class_1 = new Class_1(); 						     |
+|												     |
+| com.mycompany.myapp.Class_2 class_2 = new Class_2(); 						     |
 | .												     |
 | .												     |
 | .												     |
