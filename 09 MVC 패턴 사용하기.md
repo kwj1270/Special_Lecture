@@ -70,6 +70,10 @@ DispatcherServlet appServlet = new DispatcherServlet(contextConfigLocation); // 
 appServlet.setLoad-on-startup(1); 
 ```   
 
+![1592275621177](https://user-images.githubusercontent.com/50267433/84726178-476e8700-afc7-11ea-81fb-36d3129e5a8a.jpg)
+![1592275623138](https://user-images.githubusercontent.com/50267433/84726205-535a4900-afc7-11ea-9ee5-701322ce901f.jpg)
+
+
 ## Request 요청이 들어 왔다면  
 url 요청이 들어오면 알맞는 서블릿을 실행한다.     
 예를 들어 ```http://localhost:8080/myapp/board``` 요청이 들어왔다 가정하자
