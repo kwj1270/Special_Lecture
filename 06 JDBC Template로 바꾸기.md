@@ -137,7 +137,7 @@ JDBCTemplate 에 사용되는 DataSource 객체를 만들어 주었으니 JDBCTe
 
 1. myapp -> dao -> board 에서 BoardDAOTemplate 클래스를 생성해준다.         
 2. 아래 코드를 입력해줍니다.          
-3. 이제 기존 BoardDAOJDBC 에서 ```@Repository("boardDAOJDBC")```를 주석처리를 해줍니다.        
+3. 이제 기존 **BoardDAOJDBC 에서 ```@Repository("boardDAOJDBC")```를 주석처리를 해줍니다.**        
 
 **BoardDAOTemplate**
 ```java
