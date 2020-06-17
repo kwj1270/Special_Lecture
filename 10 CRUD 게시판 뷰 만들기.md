@@ -287,11 +287,11 @@ board 게시판으로 쉽게 이동할 수 있게 아래와 같이 ```home.jsp``
 그래서 이를 방지하고자 mapping 설정을 해줘야 하는데 이런 동작은         
 ```webapp``` -> ```WEB-INF``` -> ```spring``` -> ```appServlet``` -> ```servlet-context.xml``` 에서 처리해준다.    
 이후 아래와 같은 코드를 추가시켜주자  
-```	
+```xml	
 <resources location="/resources/board/" mapping="/board/**"/>
 ```
 **web.xml 전체 코드**
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
