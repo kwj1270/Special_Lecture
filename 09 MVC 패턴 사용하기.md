@@ -312,13 +312,14 @@ service.getAll()로 얻은 Board 객체의 리스트들 즉, ```List<Board>``` �
 				</c:forEach>
 			</tbody>
 ```
-그중 ```<c:forEach items="${boards}" var="board"> </c:forEach>``` 구문을 자세히 보면         
-아까 우리가 Model model 에 저장했던 **boards 라는 이름을 사용하고 있다.**          
-            
-위 구문은 ```List<Board>``` 에 저장된 값을 하나씩 빼서 board 라는 이름의 변수를 만든다.            	      
-board 변수에 저장된 값을 출력하기 위해서 ```${}```를 사용해서 그 값을 빼고 있다.               
-참고로 ```${}```로 출력 동작을 가능하게 해주는 기준은 getter 메소드가 있어야 가능하다.(getter 없으면 안된다.)          
-      
+그중 ```<c:forEach items="${boards}" var="board"> </c:forEach>``` 구문을 자세히 보면           
+아까 우리가 Model model 에 저장했던 **boards 라는 이름을 사용하고 있다.**            
+자바의 forEach 문과 같다. ```for(Board board : Boards){}```                   
+	       
+위 구문은 ```List<Board>``` 에 저장된 값을 하나씩 빼서 board 라는 이름의 변수를 만든다.              	      
+board 변수에 저장된 값을 출력하기 위해서 ```${}```를 사용해서 그 값을 빼고 있다.                 
+참고로 ```${}```로 출력 동작을 가능하게 해주는 기준은 getter 메소드가 있어야 가능하다.(getter 없으면 안된다.)             
+        
 **결과**         
 ![보드 리스트](https://user-images.githubusercontent.com/50267433/84844847-47818c00-b086-11ea-8177-e452909cb9ec.PNG)        
      
