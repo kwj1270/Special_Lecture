@@ -98,8 +98,9 @@ board 게시판으로 쉽게 이동할 수 있게 아래와 같이 ```home.jsp``
 </body>
 </html>
 ```   
-   
-# 3. board-detail.jsp 생성하기   
+
+# 3. board CRUD View 만들기
+## 3.1. board-detail.jsp 생성하기   
 * ```webapp``` -> ```WEB-INF``` -> ```views``` 에 board-detail.jsp를 만들어 준다.  
 * 아래와 같은 코드를 입력해준다.  
 
@@ -159,7 +160,7 @@ board 게시판으로 쉽게 이동할 수 있게 아래와 같이 ```home.jsp``
 </html>
 ```
 
-# 4. board-write.jsp 생성하기   
+## 3.2. board-write.jsp 생성하기   
 * ```webapp``` -> ```WEB-INF``` -> ```views``` 에 board-write.jsp를 만들어 준다.  
 * 아래와 같은 코드를 입력해준다.  
 
@@ -210,7 +211,7 @@ board 게시판으로 쉽게 이동할 수 있게 아래와 같이 ```home.jsp``
 </html>
 ```
 
-# 5. board-update.jsp 생성하기   
+## 3.3 board-update.jsp 생성하기   
 * ```webapp``` -> ```WEB-INF``` -> ```views``` 에 board-update.jsp를 만들어 준다.  
 * 아래와 같은 코드를 입력해준다.   
      
