@@ -98,7 +98,8 @@ board 게시판으로 쉽게 이동할 수 있게 아래와 같이 ```home.jsp``
 </body>
 </html>
 ```   
-
+![홈](https://user-images.githubusercontent.com/50267433/84847182-7e0dd580-b08b-11ea-96a1-3cbbc28822b8.PNG)    
+     
 # 3. board CRUD View 만들기
 ## 3.1. board-detail.jsp 생성하기   
 * ```webapp``` -> ```WEB-INF``` -> ```views``` 에 board-detail.jsp를 만들어 준다.  
@@ -270,5 +271,211 @@ board 게시판으로 쉽게 이동할 수 있게 아래와 같이 ```home.jsp``
 </body>
 </html>
 ``` 
-```	<resources location="/resources/board/" mapping="/board/**"/>
+```	
+<resources location="/resources/board/" mapping="/board/**"/>
 ```
+# 4. board CRUD 를 위한 JS파일 만들기         
+**Java 와 Javascript는 엄연히 다른 언어입니다.**          
+과거 네스케이프라는 회사는 HTML페이지에 경량의 프로그램 언어를 통하여 인터렉티브한 **동작**을 추가 하고 싶었다.                   
+그래서 자바를 만든 SUN 회사와 손을 잡아 언어를 만들었고 SUN사의 JAVA의 이름을 빌려와 Javascript가 되었다.             
+(이름의 역사 : 모카 -> 라이브스크립트 -> 자바스크립트)            
+         
+이후 MicroSoft사는 IE 3.0에서 동작하는 ‘JSrcipt’라는 자바스크립트와 똑같은 언어를 만들어 냈다.                
+즉, JS가 2개가 존재해지고 비슷하지만 다른 부분이 많기에 이를 표준화하고자 ECMAScript를 만들었습니다.            
+         
+현재 저희가 사용하는 자바스크립트는 표준화된 ECMAScript인데,            
+자바스크립트라는 이름이 이미 자주 사용되어서 그냥 자바 스크립트라고 사용하고 있습니다.       
+     
+자바스크립트는 이벤트에 대한 처리를 해줄 수 있습니다.         
+즉, 마우스클릭시, 드래그시, 키보드 입력시 -> '배경화면을 바꿔라' 와 같이 원하는 동작을 할 수 있습니다.        
+자바는 자바 프로그램 자체에 대해서는 이러한 이벤트 처리를 할 수 있지만 웹 브라우저에 대해서는 처리하기 힘듭니다.         
+그렇기에 우리는 자바 스크립트를 이용할 것이고 **버튼을 누르면 REQUEST 요청을 보내는 동작을 할 것입니다.**    
+
+## 4.1. board CRUD 를 위한 디렉토리 만들기
+JS, CSS, Image 같은 파일들은 주로 **resources 폴더에 넣는다.**      
+**그러나 우리 프로젝트의 구조를 보면 reources 폴더가 2개가 존재한다.**   
+      
+1. ```main``` -> ```resources```      
+2. ```main``` -> ```webapp``` -> ```resources```  
+   
+개발자가 알아서 맞춰 사용해도 되지만 우리는 ```main -> webapp -> resources``` 의 폴더를 사용할 것이다.    
+  
+1. ```main``` -> ```webapp``` -> ```resources``` 폴더에 board 폴더를 만든다.    
+2. 생성된 board 폴더 밑에 js 폴더를 만든다.       
+3. 이제 우리는 JS 파일을 만들 준비가 다 되었다.      
+     
+![리소스파일](https://user-images.githubusercontent.com/50267433/84847227-9a117700-b08b-11ea-83e0-957296f6c2a3.PNG)    
+
+## 4.2. board.js 를 만든다.  
+1.  ```main``` -> ```webapp``` -> ```resources``` -> ```board``` -> ```js``` 에 board.js를 만든다.    
+2. 아래와 같은 코드를 입력해주자       
+           
+**board.js**
+```javascript
+var board = {
+	init : function() {
+		var _this = this;
+		$('#btn-board-write').on('click', function() {
+			_this.go_write();
+		})
+	},
+	go_write : function() {
+		window.location.href = "http://localhost:8080/myapp/board/write"
+	}
+}
+board.init();
+```
+    
+## 4.3. board-deatail.js 를 만든다.  
+1.  ```main``` -> ```webapp``` -> ```resources``` -> ```board``` -> ```js``` 에 board-deatail.js를 만든다.    
+2. 아래와 같은 코드를 입력해주자      
+    
+**board-deatail.js**
+```javascript
+var board_detail = {
+	init : function() {
+		var _this = this;
+		
+		$('#btn-list').on('click', function() {
+			_this.list();
+		})
+		
+		$('#btn-update').on('click', function() {
+			_this.update();
+		})
+		
+		$('#btn-delete').on('click', function() {
+			_this.delete();
+		})
+	},
+	
+	list : function() {
+		window.location.href = "http://localhost:8080/myapp/board"
+	},
+
+	update : function() {
+		var stringArr = document.location.href.split("http://localhost:8080/myapp/board/");
+		var seq = stringArr[1];
+		window.location.href = "http://localhost:8080/myapp/board/" + seq + "/update"
+	},
+
+	delete : function() {
+		var stringArr =  document.location.href.split("http://localhost:8080/myapp/board/");
+		var seq = stringArr[1];
+			$.ajax({
+				type:'DELETE',
+				url:'/myapp/api/v1/board/' + seq,
+				dataType:'json',
+				contentType: "application/json; charset=utf-8",
+			}).done(function() {
+				alert('글이 삭제되었습니다');
+				window.location.href = "/myapp/board";
+			}).fail(function(error) {
+				alert(JSON.stringify(error));
+			});
+	}
+};
+
+board_detail.init();
+```
+## 4.3. board-write.js 를 만든다.  
+1.  ```main``` -> ```webapp``` -> ```resources``` -> ```board``` -> ```js``` 에 board-write.js를 만든다.
+2. 아래와 같은 코드를 입력해주자  
+
+**board-write.js**
+```javascript
+var board_write = {
+	init : function() {
+		var _this = this;
+		
+		$('#btn-list').on('click', function() {
+			_this.list();
+		})
+		
+		$('#btn-write').on('click', function() {
+			_this.write();
+		})
+	},
+	
+	list : function() {
+		window.location.href = "http://localhost:8080/myapp/board"
+	},
+
+	write : function() {
+		var _this =  this;
+		var data = {
+			title: $('#title').val(),
+			writer: $('#writer').val(),
+			content: $('#content').val(),
+		};
+		
+			$.ajax({
+				type:'POST',
+				url:'/myapp/api/v1/board/',
+				dataType:'json',
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify(data)
+			}).done(function() {
+				alert('글이 생성되었습니다.');
+				window.location.href = "/myapp/board";
+			}).fail(function(error) {
+				alert(JSON.stringify(error));
+			});
+	}
+};
+     
+board_write.init();
+```   
+   
+## 4.4. board-update.js 를 만든다.  
+1.  ```main``` -> ```webapp``` -> ```resources``` -> ```board``` -> ```js``` 에 board-update.js 를 만든다.      
+2. 아래와 같은 코드를 입력해주자       
+           
+**board-update.js**    
+```javascript
+var board_update = {
+	init : function() {
+		var _this = this;
+		
+		$('#btn-list').on('click', function() {
+			_this.list();
+		})
+		
+		$('#btn-update').on('click', function() {
+			_this.update();
+		})
+	},
+	
+	list : function() {
+		window.location.href = "http://localhost:8080/myapp/board"
+	},
+
+	update : function() {
+		var _this =  this;
+		var stringArr = document.location.href.split("http://localhost:8080/myapp/board/");
+		var stringArr2 = stringArr[1].split("/");
+		var seq = stringArr2[0];
+		var data = {
+			title: $('#title').val(),
+			content: $('#content').val(),
+		};
+			$.ajax({
+				type:'PUT',
+				url:'/myapp/api/v1/board/'+seq,
+				dataType:'json',
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify(data)
+			}).done(function() {
+				alert('글이 수정되었습니다.');
+				window.location.href = "/myapp/board";
+			}).fail(function(error) {
+				alert(JSON.stringify(error));
+			});
+	}
+};
+      
+board_update.init();  
+```   
+   
+
+  
