@@ -212,7 +212,7 @@ board 게시판으로 쉽게 이동할 수 있게 아래와 같이 ```home.jsp``
 </html>
 ```
 
-## 3.3 board-update.jsp 생성하기   
+## 3.3. board-update.jsp 생성하기   
 * ```webapp``` -> ```WEB-INF``` -> ```views``` 에 board-update.jsp를 만들어 준다.  
 * 아래와 같은 코드를 입력해준다.   
      
@@ -271,9 +271,55 @@ board 게시판으로 쉽게 이동할 수 있게 아래와 같이 ```home.jsp``
 </body>
 </html>
 ``` 
+## 3.4. JS파일 접근을 위한 매핑 설정
+각 파일들의 맨 아래쪽을 보면 아래와 같은 코드들들을 찾을 수 있을 것이다.    
+```
+<script src="/myapp/board/js/board.js"></script>
+<script src="/myapp/board/js/board-detail.js"></script>
+<script src="/myapp/board/js/board-write.js"></script>
+<script src="/myapp/board/js/board-update.js"></script>  
+```
+위 코드는 JS 파일을 불러와서 이벤트 동작을 처리할 수 있게끔해주는 코드이다.      
+하지만 위 코드만으로는 에러가 발생한다.         
+   
+우리가 url에 값을 주어 동작시킬때 알 수 있는 점은 프로젝트의 webapp안에서 찾는다. (뷰 찾을때)            
+즉, 위 코드는 ```/myapp/**webapp**/board/js/board-detail.js```를 찾는 동작이 된다.          
+그래서 이를 방지하고자 mapping 설정을 해줘야 하는데 이런 동작은         
+```webapp``` -> ```WEB-INF``` -> ```spring``` -> ```appServlet``` -> ```servlet-context.xml``` 에서 처리해준다.    
+이후 아래와 같은 코드를 추가시켜주자  
 ```	
 <resources location="/resources/board/" mapping="/board/**"/>
 ```
+**web.xml 전체 코드**
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven /> <!-- 어노테이션 사용을 허락하는 것 -->
+	<context:component-scan base-package="com.mycompany.myapp" /> <!-- 해당 패키지내의 모든 클래스를 훑어서  객체생성 어노테이션 있으면 컨테이너에 객체 생성-->    
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources location="/resources/" mapping="/resources/**"/>
+	<resources location="/resources/board/" mapping="/board/**"/>
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- Controller에서 리턴시에 붙여줌 -->
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+</beans:beans>
+```
+![리소스 추가](https://user-images.githubusercontent.com/50267433/84848653-87e50800-b08e-11ea-96b0-618760360496.PNG)    
+   
 # 4. board CRUD 를 위한 JS파일 만들기         
 **Java 와 Javascript는 엄연히 다른 언어입니다.**          
 과거 네스케이프라는 회사는 HTML페이지에 경량의 프로그램 언어를 통하여 인터렉티브한 **동작**을 추가 하고 싶었다.                   
