@@ -214,6 +214,107 @@ InternalResourceViewResolver internalResourceViewResolver;
 
 string url = internalResourceViewResolver.getPrefix() + boardController.home(model) +internalResourceViewResolver.getSuffix;
 ```
-이렇게 생성된 url의 값은 ```"/WEB-INF/views/home.jsp"```이고 이 경로를 통해 해당 jsp를 호출하게 된다.    
+이렇게 생성된 url의 값은 ```"/WEB-INF/views/board.jsp"```이고 이 경로를 통해 해당 jsp를 호출하게 된다.    
 
-  
+# 2. 기존 View 동작 분석하기        
+앞선 내용을 통해서 BoardController가 board 를 리턴하고       
+DispatcherServlet인 appServlet에서 InternalResourceViewResolver 객체를 이용해서        
+board 앞과 뒤에 주소 값을 붙여서 특정 파일을 사용자에게 제공하도록 만들었다.        
+      
+그 값은 ```"/WEB-INF/views/board.jsp"``` 우리는 **모델이(Model model)** 이 어떻게 사용되는지 알아볼 것이다.
+
+* 기존에 작성되었던 BoardController 가 board.jsp 를 호출하는 부분   
+    
+**BoardController**
+```java
+	@RequestMapping(value = "/board", method = RequestMethod.GET)
+	public String home(Model model) { // 모델 생성
+		// 모델 부분 //  
+		model.addAttribute("boards", service.getAll()); // 모델 호출 및 상태 변경
+		////////////
+		
+		// view 부분//
+		return "board"; // 뷰 출력
+		/////////////
+	}
+```
+   
+Model model 은      
+service.getAll()로 얻은 Board 객체의 리스트들 즉, ```List<Board>``` 객체를 ```"boards"```라는 이름으로 저장했다.      
+ 
+이같은 저장 방법을 자료구조에서 Map 형태라고도 하며 파이썬에서는 딕셔너리라고도 불린다. ```{key : value }```          
+즉, 우리는 이제 boards 라는 이름을 통해서 ```List<Board>``` 객체를 얻을 수 있다.       
+    
+* 기존에 작성했던 board.jsp를 아래 코드와 같이 변경해주자 
+
+**board.jsp**
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>게시판</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container" style="margin-top: 80px">
+		<div class="jumbotron">
+			<h2>자유 게시판</h2>
+		</div>
+		<table class="table table-horizontal table-bordered">
+			<thead class="thead-string">
+				<tr>
+					<th>게시글번호</th>
+					<th>제목</th>
+					<th>작성자</th>
+					<th>조회수</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<c:forEach items="${boards}" var="board">
+					<tr>
+						<td>${board.seq}</td>
+						<td><a href="board/${board.seq}">${board.title}</a></td>
+						<td>${board.writer}</td>
+						<td>${board.cnt}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<button type="button" class="btn btn-default float-right" id="btn-board-write">글쓰기</button>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="/myapp/board/js/board.js"></script>
+</body>
+</html>
+```
+소스 코드를 살펴보면 아래와 같은 코드가 있는 것을 알 수 있다.  
+```jsp
+			<tbody>
+				<c:forEach items="${boards}" var="board">
+					<tr>
+						<td>${board.seq}</td>
+						<td><a href="board/${board.seq}">${board.title}</a></td>
+						<td>${board.writer}</td>
+						<td>${board.cnt}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+```
+그중 ```<c:forEach items="${boards}" var="board"> </c:forEach>``` 구문을 자세히 보면     
+아까 우리가 Model model 에 저장했던 **boards 라는 이름을 사용하고 있다.**        
+         
+위 구문은 ```List<Board>``` 에 저장된 값을 하나씩 빼서 board 라는 이름의 변수를 만든다.            	   
+board 변수에 저장된 값을 출력하기 위해서 ```${}```를 사용해서 그 값을 빼고 있다.            
+참고로 ```${}```로 출력 동작을 가능하게 해주는 기준은 getter 메소드가 있어야 가능하다.(getter 없으면 안된다.)     
