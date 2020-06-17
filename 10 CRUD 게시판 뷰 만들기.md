@@ -270,3 +270,5 @@ board 게시판으로 쉽게 이동할 수 있게 아래와 같이 ```home.jsp``
 </body>
 </html>
 ``` 
+```	<resources location="/resources/board/" mapping="/board/**"/>
+```
