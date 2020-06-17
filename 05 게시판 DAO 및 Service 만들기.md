@@ -459,9 +459,7 @@ public class BoardAPIController {
 	}
 
 	@PutMapping("/api/v1/board/{seq}")
-	public int update(@PathVariable int seq) {
-		Board vo = new Board();
-		vo.setSeq(seq);
+	public int update(@RequestBody Board vo) {
 		return service.update(vo);
 	}
 	
