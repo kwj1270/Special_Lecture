@@ -302,7 +302,7 @@ service.getAll()로 얻은 Board 객체의 리스트들 즉, ```List<Board>``` �
 소스 코드를 살펴보면 아래와 같은 코드가 있는 것을 알 수 있다.  
 ```jsp
 			<tbody>
-				<c:forEach items="${boards}" var="board">
+				<c:forEach items="${boards}" var="board"> <!-- items 배열 // var = 배열 중 한 개의 객체 -->
 					<tr>
 						<td>${board.seq}</td>
 						<td><a href="board/${board.seq}">${board.title}</a></td>
