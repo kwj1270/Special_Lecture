@@ -502,6 +502,7 @@ var board_update = {
 		var stringArr2 = stringArr[1].split("/");
 		var seq = stringArr2[0];
 		var data = {
+			seq : $('#seq').val(),
 			title: $('#title').val(),
 			content: $('#content').val(),
 		};
