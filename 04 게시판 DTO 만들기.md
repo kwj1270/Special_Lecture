@@ -19,7 +19,7 @@ public class Board {
 
 }
 ```
-우선 위와 같은 코드를 작성한 뒤에 ```Alt+Shift+S```를 눌러준다.   
+### 우선 위와 같은 코드를 작성한 뒤에 ```Alt+Shift+S```를 눌러준다.   
 ![제네러이터](https://user-images.githubusercontent.com/50267433/84098539-76727f00-aa42-11ea-95db-bfb913f2fe73.PNG)
 
 1. 우리가 만들어낸 변수를 기반으로 Getter/Setter 메소드를 만들어 준다.     
